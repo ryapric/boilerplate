@@ -1,0 +1,52 @@
+---
+title: "Package Title"
+author: "Ryan Price <ryapric@gmail.com>"
+date: "`r format(Sys.time(), '%Y-%m-%d')`"
+output: github_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::wrap_rmd("README.Rmd")
+```
+
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/pkgname)](https://cran.r-project.org/package=pkgname)
+[![Build
+Status](https://travis-ci.org/ryapric/pkgname.svg?branch=master)](https://travis-ci.org/ryapric/pkgname)
+[![Monthly
+downloads](https://cranlogs.r-pkg.org/badges/pkgname)](https://cran.r-project.org/package=pkgname)
+
+---
+
+This package is [...]
+
+### Installation
+
+You can install the latest CRAN release of `pkgname` via
+`install.packages("pkgname")`.
+
+Or, to get the latest development version from GitHub --
+
+Via [devtools](https://github.com/hadley/devtools):
+
+    devtools::install_github("ryapric/pkgname")
+
+Or, clone & build from source:
+
+    cd /path/to/your/repos
+    git clone https://github.com/ryapric/pkgname.git
+    R CMD INSTALL pkgname
+
+To use the most recent development version of `pkgname` in your own package, you
+can include it in your `Remotes:` field in your DESCRIPTION file:
+
+    Remotes: github::ryapric/pkgname
+
+Note that packages being submitted to CRAN *cannot* have a `Remotes` field.
+Refer
+[here](https://cran.r-project.org/web/packages/devtools/vignettes/dependencies.html)
+for more info.
+
+### License
+
+MIT

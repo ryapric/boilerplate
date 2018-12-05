@@ -1,0 +1,12 @@
+^Jenkinsfile$
+^Makefile$
+^.*\.Rproj$
+^\.Rproj\.user$
+^.*\.log$
+^.*\.json$
+^.*\.txt$
+README.*
+cran-comments.md
+Makefile
+Jenkinsfile
+^\.travis\.yml
