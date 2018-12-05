@@ -1,0 +1,14 @@
+venv/
+*cache*
+*.pyc
+.vscode/
+build/
+dist/
+*egg-info*
+test.db
+config.json
+README.*
+!README.md
+*.log
+*.zip
+*.tar.gz
