@@ -14,12 +14,12 @@ all: venv dev-pkgs install_venv test clean
 FORCE:
 
 venv: FORCE
-	@rm -rf venv
-	@python3 -m venv venv
+	@python3 -m venv --clear venv
 
 dev-pkgs: venv
 	@$(venv-act); \
-	pip3 install setuptools pytest wheel
+	pip3 install wheel; \
+	pip3 install setuptools pytest
 
 test: venv dev-pkgs install_venv clean
 	@$(venv-act); \
