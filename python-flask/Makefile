@@ -19,7 +19,7 @@ venv: FORCE
 dev-pkgs: venv
 	@$(venv-act); \
 	pip3 install wheel; \
-	pip3 install setuptools pytest
+	pip3 install setuptools pytest pytest-flask
 
 test: venv dev-pkgs install_venv clean
 	@$(venv-act); \
@@ -33,6 +33,15 @@ install_venv: venv
 	@$(venv-act); \
 	pip3 install .
 
+test-cli: install_venv
+	@$(venv-act); \
+	command -v splunk-listener; \
+	command -v get-servicenow
+
+listen: install_venv
+	@$(venv-act); \
+	splunk-listener
+
 clean:
 	@find . -type d -regextype posix-extended -regex ".*\.egg-info|.*cache.*" -exec rm -rf {} +
 	@find . -type f -regextype posix-extended -regex ".*\.pyc" -exec rm {} +
@@ -45,10 +54,6 @@ ifeq ($(`whoami`), 'root')
 else
 	pip3 install --user .
 endif
-
-doc:
-	@pandoc -o README.html README.md
-	@echo "Created README.html"
 
 uninstall:
 	pip3 uninstall -y $(PKGNAME)
