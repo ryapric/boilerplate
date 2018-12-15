@@ -2,9 +2,34 @@ Julia Package Template
 ======================
 
 This sub-repo provides a `Makefile` to generate the skeleton for Julia packages.
-As traditional 'boilerplate' code in Julia is not only discouraged, but useless
-by Julia's design, this `README` and `Makefile` serve to document the process of
-generating package contents for Julia projects.
+Most traditional 'boilerplate' code in Julia is not only discouraged, but
+useless by Julia's design (for example, UUIDs won't be correct just by changing
+the package name itself). Therefore, this `README` and `Makefile` serve to
+document the process of manually generating package contents for Julia projects,
+but also generating the most important parts automatically (respectively).
+
+Using the Makefile
+------------------
+
+The `Makefile` provides a `generate` target, which will call Julia's
+`Pkg.generate()`, as well as important files that are missing from that call,
+such as the `test` folder & a stubbed `runtests.jl` file.
+
+There is no default name that the `Makefile` will assign to a project when
+calling `make generate`. As such, you will need to call it with an environment
+variable `PKGNAME` specifying the name of the project, i.e.:
+
+```sh
+$ make generate PKGNAME=SomePkgName
+```
+
+The `Makefile` also includes targets for:
+
+- `test`
+
+- `build`
+
+- `precompile`
 
 Workflow Suggestions
 --------------------

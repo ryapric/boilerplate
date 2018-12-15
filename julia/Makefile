@@ -1,10 +1,26 @@
+# Basic julia call with colors
+juliab = julia --color=yes
+
+# Project-based julia calls with colors
+juliapg = julia --color=yes --project="$$PKGNAME"
+juliap = julia --color=yes --project
+
 all: build test
-	@echo "Not defined."
+
+FORCE:
 
 generate:
-	@julia -e "using Pkg; Pkg.generate(\"$${PKGNAME}\")"
-	@mkdir $${PKGNAME}/test
-	@cp runtests.jl $${PKGNAME}/test/runtests.jl
+	@$(juliab) -e "using Pkg; Pkg.generate(\"$${PKGNAME}\")"
+	@cp Makefile $${PKGNAME}/Makefile
+	@$(juliapg) -e "using Pkg; Pkg.add(\"Test\")"
+	@cp -r test/ $${PKGNAME}/test
 
-test:
-	@julia --project -e 'using Pkg; Pkg.test()'
+build: FORCE
+	@$(juliap) -e "using Pkg; Pkg.build()"
+
+test: FORCE
+	@$(juliap) -e "using Pkg; Pkg.test()"
+
+# precompile() is not an exported function from Pkg; just a command in the REPL
+# precompile: FORCE
+# 	@$(juliap) -e "using Pkg; Pkg.precompile()"
