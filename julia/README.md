@@ -38,7 +38,7 @@ The `Makefile` also includes targets for:
 
 - `build`
 
-- `precompile` (whenever `Pkg` gets this as an exported function)
+- `precompile` (Julia is probably subject to change how I'm invoking this)
 
 Workflow Suggestions
 --------------------

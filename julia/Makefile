@@ -22,5 +22,6 @@ test: FORCE
 	@$(juliap) -e "using Pkg; Pkg.test()"
 
 # precompile() is not an exported function from Pkg; just a command in the REPL
-# precompile: FORCE
-# 	@$(juliap) -e "using Pkg; Pkg.precompile()"
+# So, it can be accessed via Pkg.REPLMode.pkgstr()
+precompile: FORCE
+	@$(juliap) -e "using Pkg; Pkg.REPLMode.pkgstr(\"precompile\")"
