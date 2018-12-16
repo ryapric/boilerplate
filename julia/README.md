@@ -24,8 +24,13 @@ calling `make generate`. As such, you will need to call it with an environment
 variable `PKGNAME` specifying the name of the project, i.e.:
 
 ```sh
-$ make generate PKGNAME=SomePkgName
+$ make generate PKGNAME="../SomePkgName"
 ```
+
+Note the parent-directory reference, '`..`'. You will likely want to run it this
+way, if you keep all your code repositories in one folder, as this will create
+your project in that same folder, instead of as a subfolder in your current
+directory (as is the default when just passing a name for the project).
 
 The `Makefile` also includes targets for:
 
