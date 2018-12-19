@@ -1,10 +1,16 @@
-# This structure taken from the DataFrames.jl runtests.jl file
+"""
+This file structure taken from the DataFrames runtests.jl file. As you add
+test files, add them to the `tests` array. Note that `srcfile.jl` is just a
+placeholder name for actual source files.
+
+This file will be called when running `make test` from the repo top-level.
+"""
 
 fatalerrors = length(ARGS) > 0 && ARGS[1] == "-f"
 quiet = length(ARGS) > 0 && ARGS[1] == "-q"
 anyerrors = false
 
-tests = ["modulename.jl"]
+tests = ["srcfile.jl"]
 
 println("Running tests:")
 

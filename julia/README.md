@@ -27,10 +27,22 @@ variable `PKGNAME` specifying the name of the project, i.e.:
 $ make generate PKGNAME="../SomePkgName"
 ```
 
-Note the parent-directory reference, '`..`'. You will likely want to run it this
-way, if you keep all your code repositories in one folder, as this will create
-your project in that same folder, instead of as a subfolder in your current
-directory (as is the default when just passing a name for the project).
+Note the parent-directory reference, '`..`'. You are able to use absolute and
+relative path references in the passed variable, and the package will be
+initialized at this location. If you just specify a name (e.g. `SomePkgName`),
+then the folder for the packge will be made in the current (`boilerplate`)
+directory, which is probably not what you want.
+
+Note that the `generate` target will add the Julia packages `Statistics` and
+`Test` to your project's `Project.toml` file. If you do not want these, or any
+other packages that are added, you will need to remove them through Julia, with
+either of the following:
+
+```sh
+(PkgName)> remove Pkg1 Pkg2 ...
+# or
+$ julia --project -e 'using Pkg; Pkg.remove(["Pkg1", "Pkg2", ...])
+```
 
 The `Makefile` also includes targets for:
 
