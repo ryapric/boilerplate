@@ -8,9 +8,6 @@ juliap = julia --color=yes --project
 # Bare package name provided, in case it includes path info
 PKGNAMEBARE := $$(echo "$${PKGNAME}" | sed -r 's/^.*\/([A-Za-z0-9_\-]+)$$/\1/')
 
-check:
-	echo $(PKGNAMEBARE)
-
 all: precompile build test
 
 FORCE:

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 if [ "$EUID" -ne 0 ]; then
     echo "Must be run as root. Aborting" >&2
@@ -11,7 +12,6 @@ if [ -z "$1" ] ; then
 fi
 
 tmpgz="/tmp/julia.tar.gz"
-julia="/tmp/julia-${1}"
 
 curl -o "$tmpgz" "https://julialang-s3.julialang.org/bin/linux/x64/1.0/julia-${1}-linux-x86_64.tar.gz"
 
