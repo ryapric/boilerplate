@@ -22,8 +22,14 @@ risk-free rate. If `rf` is missing, use 0.02.
 
 # Examples
 ```jldoctest
-julia> sharpe([0.03, 0.01], rf = 0.02)
-0.0
+using PkgName
+
+returns = [0.03, 0.04, 0.01]
+sharpe(returns, rf = 0.02)
+
+# output
+
+0.4364357804719848
 ```
 """
 function sharpe(x::Array{Float64}; rf::Float64 = 0.02)::Float64

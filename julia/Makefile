@@ -22,11 +22,22 @@ generate:
 	@cp -r src/ $${PKGNAME}/src
 	@mv $${PKGNAME}/src/PkgName.jl $${PKGNAME}/src/$(PKGNAMEBARE).jl
 	@sed -i "s/PkgName/$(PKGNAMEBARE)/g" $${PKGNAME}/src/$(PKGNAMEBARE).jl
+	@sed -i "s/PkgName/$(PKGNAMEBARE)/g" $${PKGNAME}/src/srcfile.jl
 
 	@# Initialize tests skeleton
 	@$(juliapg) -e "using Pkg; Pkg.add([\"Test\", \"Statistics\"])"
 	@cp -r test/ $${PKGNAME}/test
 	@sed -i "s/PkgName/$(PKGNAMEBARE)/g" $${PKGNAME}/test/srcfile.jl
+
+	@# Initialize documentation skeleton
+	@$(juliapg) -e "using Pkg; Pkg.add(\"Documenter\")"
+	@cp -r docs/ $${PKGNAME}/docs
+	@sed -i "s/PkgName/$(PKGNAMEBARE)/g" $${PKGNAME}/docs/make.jl
+	@sed -i "s/PkgName/$(PKGNAMEBARE)/g" $${PKGNAME}/docs/src/index.md
+
+	@# Initialize git &.gitignore
+	@git -C $$PKGNAME init
+	@cp pkg_gitignore $${PKGNAME}/.gitignore
 
 # precompile() is not an exported function from Pkg; just a command in the REPL
 # So, it can be accessed via Pkg.REPLMode.pkgstr()
@@ -38,3 +49,7 @@ build: FORCE
 
 test: FORCE
 	@$(juliap) -e "using Pkg; Pkg.test()"
+
+doc: FORCE
+	@# Note that make.jl needs to be run from the docs directory
+	@cd docs && $(juliap) make.jl && cd $$OLDPWD
