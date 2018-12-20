@@ -17,8 +17,8 @@ Calculate the Sharpe Ratio of a financial returns series `x`, using `rf` as the
 risk-free rate. If `rf` is missing, use 0.02.
 
 # Arguments
-- x::Array{Float64}: An array of returns data
-- rf::Float64: The risk-free rate
+- `x::Array{Float64}`: An array of returns data
+- `rf::Float64`: The risk-free rate
 
 # Examples
 ```jldoctest
