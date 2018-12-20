@@ -24,19 +24,19 @@ calling `make generate`. As such, you will need to call it with an environment
 variable `PKGNAME` specifying the name of the project, i.e.:
 
 ```sh
-$ make generate PKGNAME="../SomePkgName"
+$ make generate PKGNAME="/home/user/path/to/SomePkgName"
 ```
 
-Note the parent-directory reference, '`..`'. You are able to use absolute and
-relative path references in the passed variable, and the package will be
-initialized at this location. If you just specify a name (e.g. `SomePkgName`),
-then the folder for the packge will be made in the current (`boilerplate`)
-directory, which is probably not what you want.
+Note that right now, this path must be *absolute*, to safely create & fill your
+project folder. Tweaks to allow for relative paths (e.g. using `~`) will
+eventually be available. Additionally, if you just specify a name (e.g.
+`SomePkgName`), then the folder for the packge will be made in the current
+`boilerplate/julia` directory, which is probably not what you want.
 
-Note that the `generate` target will add the Julia packages `Statistics` and
-`Test` to your project's `Project.toml` file. If you do not want these, or any
-other packages that are added, you will need to remove them through Julia, with
-either of the following:
+Note that the `generate` target will add the Julia packages `Documenter`,
+`Statistics`, and `Test` to your project's `Project.toml` file. If you do not
+want these, or any other packages that are added, you will need to remove them
+through Julia, with either of the following:
 
 ```sh
 (PkgName)> remove Pkg1 Pkg2 ...

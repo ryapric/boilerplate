@@ -19,7 +19,7 @@ Again, please note that:
 """
 
 using Test
-using Ex
+using PkgName
 
 @testset "bogus" begin
     @test 1 == 1
