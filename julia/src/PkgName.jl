@@ -16,4 +16,4 @@ dir = readdir(dirname(@__FILE__))
 includes = filter(x -> (endswith(x, "jl") && x != "PkgName.jl"), dir)
 include.(includes)
 
-end # module Ex
+end # module PkgName
