@@ -33,16 +33,20 @@ eventually be available. Additionally, if you just specify a name (e.g.
 `SomePkgName`), then the folder for the packge will be made in the current
 `boilerplate/julia` directory, which is probably not what you want.
 
-Note that the `generate` target will add the Julia packages `Documenter`,
-`Statistics`, and `Test` to your project's `Project.toml` file. If you do not
-want these, or any other packages that are added, you will need to remove them
-through Julia, with either of the following:
+Note that the `generate` target will add the Julia packages `Documenter` and
+`Statistics` to your project's `Project.toml` file as dependencies, and `Test`
+as an "extra", only for running tests. If you do not want these, or any other
+packages that are added, you will need to remove them through Julia, with either
+of the following:
 
 ```sh
 (PkgName)> remove Pkg1 Pkg2 ...
 # or
 $ julia --project -e 'using Pkg; Pkg.remove(["Pkg1", "Pkg2", ...])
 ```
+
+As of the time of this writing, packages in other blocks in the `Project.toml`
+file (such as `Test` in `[extras]`) need to be removed manually.
 
 The `Makefile` also includes targets for:
 

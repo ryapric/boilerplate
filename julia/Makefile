@@ -25,7 +25,9 @@ generate:
 	@sed -i "s/PkgName/$(PKGNAMEBARE)/g" $${PKGNAME}/src/srcfile.jl
 
 	@# Initialize tests skeleton
-	@$(juliapg) -e "using Pkg; Pkg.add([\"Test\", \"Statistics\"])"
+	@$(juliapg) -e "using Pkg; Pkg.add([\"Statistics\"])"
+	@echo '\n[extras]\nTest = "8dfed614-e22c-5e08-85e1-65c5234f0b40"\n\n[targets]\ntest = ["Test"]' >> $${PKGNAME}/Project.toml
+
 	@cp -r test/ $${PKGNAME}/test
 	@sed -i "s/PkgName/$(PKGNAMEBARE)/g" $${PKGNAME}/test/srcfile.jl
 
