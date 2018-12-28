@@ -37,9 +37,10 @@ generate:
 	@sed -i "s/PkgName/$(PKGNAMEBARE)/g" $${PKGNAME}/docs/make.jl
 	@sed -i "s/PkgName/$(PKGNAMEBARE)/g" $${PKGNAME}/docs/src/index.md
 
-	@# Initialize git &.gitignore
+	@# Initialize git & .gitignore, and CI files
 	@git -C $$PKGNAME init
 	@cp pkg_gitignore $${PKGNAME}/.gitignore
+	@cp .travis.yml $${PKGNAME}/.travis.yml
 
 # precompile() is not an exported function from Pkg; just a command in the REPL
 # So, it can be accessed via Pkg.REPLMode.pkgstr()
