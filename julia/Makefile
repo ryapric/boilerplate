@@ -15,7 +15,7 @@ FORCE:
 generate:
 	@# Initalize package files via Julia
 	@$(juliab) -e "using Pkg; Pkg.generate(\"$${PKGNAME}\")"
-	@cp Makefile $${PKGNAME}/Makefile
+	@sed '/^generate:/,/^# end generate/d' Makefile > $${PKGNAME}/Makefile
 
 	@# Initialize src folder skeleton
 	@rm -rf $${PKGNAME}/src/
@@ -42,6 +42,7 @@ generate:
 	@cp pkg_gitignore $${PKGNAME}/.gitignore
 	@cp .travis.yml $${PKGNAME}/.travis.yml
 
+# end generate
 # precompile() is not an exported function from Pkg; just a command in the REPL
 # So, it can be accessed via Pkg.REPLMode.pkgstr()
 precompile: FORCE
