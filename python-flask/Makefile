@@ -19,7 +19,7 @@ venv: FORCE
 dev-pkgs: venv
 	@$(venv-act); \
 	pip3 install wheel; \
-	pip3 install setuptools pytest pytest-flask
+	pip3 install setuptools pytest
 
 test: venv dev-pkgs install_venv clean
 	@$(venv-act); \
@@ -33,27 +33,22 @@ install_venv: venv
 	@$(venv-act); \
 	pip3 install .
 
-test-cli: install_venv
-	@$(venv-act); \
-	command -v splunk-listener; \
-	command -v get-servicenow
-
-listen: install_venv
-	@$(venv-act); \
-	splunk-listener
-
-clean:
+clean: FORCE
 	@find . -type d -regextype posix-extended -regex ".*\.egg-info|.*cache.*" -exec rm -rf {} +
 	@find . -type f -regextype posix-extended -regex ".*\.pyc" -exec rm {} +
 	@find . -name "test.db" -exec rm {} +
 
 # Install to system library
-install:
+install: FORCE
 ifeq ($(`whoami`), 'root')
 	pip3 install .
 else
 	pip3 install --user .
 endif
 
-uninstall:
+doc: FORCE
+	@pandoc -o README.html README.md
+	@echo "Created README.html"
+
+uninstall: FORCE
 	pip3 uninstall -y $(PKGNAME)
