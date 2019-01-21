@@ -21,9 +21,10 @@ dev-pkgs: venv
 	pip3 install wheel; \
 	pip3 install setuptools pytest
 
-test: venv dev-pkgs install_venv clean
+test: clean venv dev-pkgs install_venv
 	@$(venv-act); \
-	python3 -m pytest -v
+	python3 -m pytest -v; \
+	make -s clean
 
 build: venv dev-pkgs
 	@$(venv-act); \
