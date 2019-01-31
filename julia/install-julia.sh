@@ -13,7 +13,7 @@ fi
 
 tmpgz="/tmp/julia.tar.gz"
 
-curl -o "$tmpgz" "https://julialang-s3.julialang.org/bin/linux/x64/1.0/julia-${1}-linux-x86_64.tar.gz"
+curl -o "$tmpgz" "https://julialang-s3.julialang.org/bin/linux/x64/1.1/julia-${1}-linux-x86_64.tar.gz"
 
 mkdir -p /usr/share/julia
 tar --overwrite -xzf "$tmpgz" -C /usr/share/julia/
