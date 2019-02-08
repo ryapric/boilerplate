@@ -1,3 +1,6 @@
+# Need to adjust shell used, for some commands like `echo`
+SHELL = /usr/bin/env bash
+
 # Basic julia call with colors
 juliab = julia --color=yes
 
