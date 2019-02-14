@@ -9,6 +9,9 @@ build:
 check: build
 	$(R) check --no-manual *.tar.gz
 
+test:
+	Rscript -e 'devtools::test()'
+
 define devtools_check
 	Rscript -e " \
 		tryCatch( \
