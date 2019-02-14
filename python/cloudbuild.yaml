@@ -1,0 +1,18 @@
+# Config file for Google Cloud Build
+
+# Visit Cloud Build's docs page for more details and extensibility:
+# https://cloud.google.com/cloud-build/docs/
+
+steps:
+
+# Unit, etc. tests
+- name: 'python:3.7-stretch'
+  entrypoint: 'make'
+  args: ['test']
+
+# Build image (which also serves to test if package is installable)
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/fredcast/fredcast:latest', '.']
+
+# If an image was built (successfully), push it
+images: ['gcr.io/fredcast/fredcast:latest']
