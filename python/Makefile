@@ -58,8 +58,8 @@ uninstall: FORCE
 #################################
 # --- Google Cloud deployment ---
 #################################
-PROJECT = fredcast
-IMAGE = fredcast
+PROJECT = project_id
+IMAGE = image_name
 TAG = latest
 REPO = gcr.io/$(PROJECT)
 
@@ -88,10 +88,10 @@ gcloud-builds-submit-image: clean
 # Delete untagged images from GCR, to save space and reduce clutter
 # From `gcloud container images delete --help`
 gcloud-delete-untagged-images:
-	@digests=$$(gcloud container images list-tags gcr.io/fredcast/fredcast \
+	@digests=$$(gcloud container images list-tags gcr.io/$(PROJECT)/$(IMAGE) \
 	    --filter='-tags:*' --format='get(digest)'); \
 	for d in $$digests; do \
-	    gcloud container images delete --quiet gcr.io/fredcast/fredcast@$$d; \
+	    gcloud container images delete --quiet gcr.io/$(PROJECT)/$(IMAGE)@$$d; \
 	done
 
 # Launch brand new GCC instance, based on a GCR image
