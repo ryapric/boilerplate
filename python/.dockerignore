@@ -1,5 +1,5 @@
 *
 !setup.py
-!stlfed_py/
+!pkg_folder/
 !tests/
 !Makefile
