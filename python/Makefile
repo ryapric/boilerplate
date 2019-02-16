@@ -39,6 +39,13 @@ clean: FORCE
 	@find . -type f -regextype posix-extended -regex ".*\.pyc" -exec rm {} +
 	@find . -name "test.db" -exec rm {} +
 
+# Generate requirements.txt based on what's in setup.py
+# This is mostly for cloud products that demand a requirements.txt file
+requirements_txt: setup.py FORCE
+	@awk '/install_requires/{flag=1;next};/]/{flag=0}flag' setup.py > requirements.txt
+	@sed -i -r "s/\s+|'|,//g" requirements.txt
+	@sed -i -r '/^#/d' requirements.txt
+
 # Install to system library
 install: FORCE
 ifeq ($(`whoami`), 'root')
@@ -58,8 +65,8 @@ uninstall: FORCE
 #################################
 # --- Google Cloud deployment ---
 #################################
-PROJECT = project_id
-IMAGE = image_name
+PROJECT = fredcast
+IMAGE = fredcast
 TAG = latest
 REPO = gcr.io/$(PROJECT)
 
@@ -89,9 +96,9 @@ gcloud-builds-submit-image: clean
 # From `gcloud container images delete --help`
 gcloud-delete-untagged-images:
 	@digests=$$(gcloud container images list-tags gcr.io/$(PROJECT)/$(IMAGE) \
-	    --filter='-tags:*' --format='get(digest)'); \
+		--filter='-tags:*' --format='get(digest)'); \
 	for d in $$digests; do \
-	    gcloud container images delete --quiet gcr.io/$(PROJECT)/$(IMAGE)@$$d; \
+		gcloud container images delete --quiet gcr.io/$(PROJECT)/$(IMAGE)@$$d; \
 	done
 
 # Launch brand new GCC instance, based on a GCR image
