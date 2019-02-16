@@ -41,6 +41,8 @@ clean: FORCE
 
 # Generate requirements.txt based on what's in setup.py
 # This is mostly for cloud products that demand a requirements.txt file
+# awk command based on:
+# https://stackoverflow.com/questions/17988756/how-to-select-lines-between-two-marker-patterns-which-may-occur-multiple-times-w
 requirements_txt: setup.py FORCE
 	@awk '/install_requires/{flag=1;next};/]/{flag=0}flag' setup.py > requirements.txt
 	@sed -i -r "s/\s+|'|,//g" requirements.txt
