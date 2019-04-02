@@ -19,12 +19,17 @@ venv: FORCE
 dev-pkgs: venv
 	@$(venv-act); \
 	pip3 install wheel; \
-	pip3 install setuptools pytest pytest-flask
+	pip3 install setuptools coverage pytest pytest-cov pytest-flask
 
 test: clean venv dev-pkgs install_venv
 	@$(venv-act); \
-	python3 -m pytest -v # don't chain from here, so failed tests throw shell error code
+	python3 -m pytest --cov=fredcast . -v # don't chain from here, so failed tests throw shell error code
+	@$(venv-act); \
+	if [ $$(python3 -m coverage report | tail -1 | awk '{ print $$NF }' | tr -d '%') -lt 95 ]; then \
+		echo -e "\nFAILED: Insufficient test coverage (<95%)\n" 2>&1 && exit 1; \
+	fi
 	@make -s clean
+	@rm -rf venv
 
 build: venv dev-pkgs
 	@$(venv-act); \
@@ -32,21 +37,13 @@ build: venv dev-pkgs
 
 install_venv: venv
 	@$(venv-act); \
-	pip3 install .
+	if [ -e ./requirements.txt ]; then pip3 install -r requirements.txt; else pip3 install . ; fi
 
 clean: FORCE
-	@find . -type d -regextype posix-extended -regex ".*\.egg-info|.*cache.*" -exec rm -rf {} +
+	@find . -type d -regextype posix-extended -regex ".*\.egg-info|.*pycache.*" -exec rm -rf {} +
 	@find . -type f -regextype posix-extended -regex ".*\.pyc" -exec rm {} +
+	@find . -type f -regextype posix-extended -regex ".*,cover" -exec rm {} +
 	@find . -name "test.db" -exec rm {} +
-
-# Generate requirements.txt based on what's in setup.py
-# This is mostly for cloud products that demand a requirements.txt file
-# awk command based on:
-# https://stackoverflow.com/questions/17988756/how-to-select-lines-between-two-marker-patterns-which-may-occur-multiple-times-w
-requirements_txt: setup.py FORCE
-	@awk '/install_requires/{flag=1;next};/]/{flag=0}flag' setup.py > requirements.txt
-	@sed -i -r "s/\s+|'|,//g" requirements.txt
-	@sed -i -r '/^#/d' requirements.txt
 
 # Install to system library
 install: FORCE
@@ -98,9 +95,9 @@ gcloud-builds-submit-image: clean
 # From `gcloud container images delete --help`
 gcloud-delete-untagged-images:
 	@digests=$$(gcloud container images list-tags gcr.io/$(PROJECT)/$(IMAGE) \
-		--filter='-tags:*' --format='get(digest)'); \
+	    --filter='-tags:*' --format='get(digest)'); \
 	for d in $$digests; do \
-		gcloud container images delete --quiet gcr.io/$(PROJECT)/$(IMAGE)@$$d; \
+	    gcloud container images delete --quiet gcr.io/$(PROJECT)/$(IMAGE)@$$d; \
 	done
 
 # Launch brand new GCC instance, based on a GCR image

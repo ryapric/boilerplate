@@ -1,1 +1,28 @@
+# Heavy Python garbage
 venv/
+*cache*
+*.pyc
+build/
+dist/
+*egg-info*
+
+# Non-.md READMEs
+README.*
+!README.md
+
+# Test data
+*.csv
+!tests/data/*.csv
+*.db
+
+# Coverage files/folders
+*coverage*
+*cov/
+*,cover
+
+# Misc.
+.vscode/
+config.json
+*.log
+*.zip
+*.tar.gz

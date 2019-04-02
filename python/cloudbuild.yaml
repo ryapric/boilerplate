@@ -1,18 +1,30 @@
-# Config file for Google Cloud Build
+# Config file for Google Cloud Build, with App Engine deployment
 
 # Visit Cloud Build's docs page for more details and extensibility:
-# https://cloud.google.com/cloud-build/docs/
+# https://cloud.google.com/cloud-build/docs/<language>
 
+# Since these steps are run in sequence, a fail in the tests results in a fail
+# in the overall build, and therefore no deployment (which is good)
 steps:
 
 # Unit, etc. tests
 - name: 'python:3.7-stretch'
   entrypoint: 'make'
   args: ['test']
+# # For Node projects, this might look like:
+# - name: 'gcr.io/cloud-builders/npm'
+#   args: ['run', 'test']
+# # which is identical to running `npm run test` on the command line (if
+# # you've defined a 'test' block in your entrypoints in `package.json`)
 
-# Build image (which also serves to test if package is installable)
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/fredcast/fredcast:latest', '.']
+# Deploy to App Engine
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['app', 'deploy']
+# This will deploy the *current repo* to the currently-configured Project ID.
+# You can specify a different target Project ID as an arg to `deploy`.
 
-# If an image was built (successfully), push it
-images: ['gcr.io/fredcast/fredcast:latest']
+# Nate: note that if you just want to use Cloud Build for automated testing, you
+# can comment out the deploy block. This example Flask app builds in less than
+# three minutes, and since Cloud Build gives you the first 120 minutes per day
+# *for free*, you can literally implement this at work in 5 minutes, without
+# impacting your current pipeline system.
