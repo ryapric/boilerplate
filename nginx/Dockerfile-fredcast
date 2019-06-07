@@ -1,0 +1,10 @@
+FROM docker.io/library/python:3.7-stretch
+
+RUN git clone https://github.com/ryapric/fredcast.git \
+    && pip3 install -r fredcast/requirements.txt
+
+COPY main.py fredcast/main.py
+
+EXPOSE 8080
+
+CMD ["python3", "fredcast/main.py"]

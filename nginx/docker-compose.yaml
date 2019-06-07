@@ -1,0 +1,32 @@
+# See https://dev.to/ishankhare07/nginx-as-reverse-proxy-for-a-flask-app-using-docker-3ajg
+
+version: "3"
+
+services:
+
+  nginx:
+    container_name: nginx
+    networks:
+      - fredcastnet
+    build:
+      context: .
+      dockerfile: ./Dockerfile-nginx
+    image: nginx-fredcast:latest
+    ports:
+      - 80:80
+    depends_on:
+      - fredcast
+
+  fredcast:
+    container_name: fredcast
+    networks:
+      fredcastnet:
+        aliases:
+          - fredcast-app
+    build:
+      context: .
+      dockerfile: ./Dockerfile-fredcast
+    image: fredcast:latest
+
+networks:
+  fredcastnet:
