@@ -4,18 +4,18 @@ Demo for NGINX as a Reverse Proxy
 This simple demo takes the [FREDcast
 utility](https://www.github.com/ryapric/fredcast), and deploys it behind a
 reverse proxy powered by [NGINX](https://www.nginx.com). Instead of hitting
-FREDcast's `hostname:8080/api/fredcast` endpoint, you would instead simply hit
-`hostname/fredcast`. In the local case here, the hostname is `localhost`
-(`127.0.0.1`).
+FREDcast's `http://hostname:8080/api/fredcast` endpoint, you would instead
+simply hit `http://hostname/fredcast`. In the local case here, the hostname is
+`localhost` (`127.0.0.1`).
 
 Requirements
 ------------
 
-- [Docker]()
+- [Docker](https://docs.docker.com/)
 
-- [Docker Compose]()
+- [Docker Compose](https://docs.docker.com/compose/)
 
-- [GNU Make]()
+- [GNU Make](https://www.gnu.org/software/make/)
 
 How to Use
 ----------

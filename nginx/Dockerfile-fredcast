@@ -3,7 +3,8 @@ FROM docker.io/library/python:3.7-stretch
 RUN git clone https://github.com/ryapric/fredcast.git \
     && pip3 install -r fredcast/requirements.txt
 
-COPY main.py fredcast/main.py
+# COPY main.py fredcast/main.py
+RUN sed -E -i 's/127.0.0.1|localhost/0.0.0.0/g' fredcast/main.py
 
 EXPOSE 8080
 
