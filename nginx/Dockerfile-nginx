@@ -2,3 +2,6 @@ FROM docker.io/library/nginx:latest
 
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY fredcast.conf /etc/nginx/conf.d/fredcast.conf
+COPY load-balancing.conf /etc/nginx/conf.d/load-balancing.conf
+
+RUN rm /etc/nginx/conf.d/default.conf
