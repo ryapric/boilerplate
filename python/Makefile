@@ -41,6 +41,7 @@ install_venv: venv
 
 clean: FORCE
 	@find . -type d -regextype posix-extended -regex ".*\.egg-info|.*pycache.*" -exec rm -rf {} +
+	@find . -type d -regextype posix-extended -regex ".*venv.*" -exec rm -rf {} +
 	@find . -type f -regextype posix-extended -regex ".*\.pyc" -exec rm {} +
 	@find . -type f -regextype posix-extended -regex ".*,cover" -exec rm {} +
 	@find . -name "test.db" -exec rm {} +
