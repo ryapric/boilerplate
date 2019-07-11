@@ -23,7 +23,7 @@ dev-pkgs: venv
 
 test: clean venv dev-pkgs install_venv
 	@$(venv-act); \
-	python3 -m pytest --cov=fredcast . -v # don't chain from here, so failed tests throw shell error code
+	python3 -m pytest --cov $(PKGNAME) . -v # don't chain from here, so failed tests throw shell error code
 	@$(venv-act); \
 	if [ $$(python3 -m coverage report | tail -1 | awk '{ print $$NF }' | tr -d '%') -lt 95 ]; then \
 		echo -e "\nFAILED: Insufficient test coverage (<95%)\n" 2>&1 && exit 1; \
