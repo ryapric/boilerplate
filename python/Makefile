@@ -34,9 +34,8 @@ dev-pkgs: venv
 	$(DEV-PKGS)
 
 test: clean venv dev-pkgs install_venv
-	@$(VENV-ACT) && \
-	$(TEST) # don't chain from here, so failed tests throw shell error code
-	@$(COVCHECK)
+	@$(VENV-ACT) && $(TEST)
+	@$(VENV-ACT) && $(COVCHECK)
 	@make -s clean
 	@rm -rf venv
 
