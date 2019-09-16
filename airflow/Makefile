@@ -22,6 +22,7 @@ venv-new: FORCE
 
 install: venv-new
 	@$(VENV-ACT) && \
+	pip3 install wheel && \
 	pip3 install apache-airflow
 
 initdb:
