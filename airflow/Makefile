@@ -10,7 +10,7 @@ VENV-ACT = source venv/bin/activate
 
 
 # Default target does initial config
-all: install initdb
+all: wipe install init start
 
 
 # Dummy FORCE target dep to make things always run
@@ -21,13 +21,22 @@ venv-new: FORCE
 	@python3 -m venv --clear venv
 
 install: venv-new
+	@printf "Installing Airflow to ./venv...\n"
 	@$(VENV-ACT) && \
 	pip3 install wheel && \
 	pip3 install apache-airflow
 
-initdb:
+# This will initilaize the database (and also dump to AIRFLOW_HOME), so to get
+# rid of the examples in there, you'd need to run the init, change the config,
+# then reset the database.
+init:
+	@printf "Initializing Airflow metadata database...\n"
 	@$(VENV-ACT) && \
-	airflow initdb
+	mkdir -p ~/airflow/dags && \
+	airflow initdb && \
+	sed -i 's/load_examples = True/load_examples = False/g' ~/airflow/airflow.cfg && \
+	airflow resetdb -y
+	@cp dags/* ~/airflow/dags/
 
 webserver:
 	@$(VENV-ACT) && \
@@ -39,9 +48,14 @@ scheduler:
 	airflow scheduler -D
 	@printf "Started Airflow scheduler\n"
 
-run:
+start:
 	@make -s webserver scheduler
 
 stop:
 	@pkill -f airflow
 	@printf "Terminated all Airflow processes\n"
+
+# Take this one out if going into an actual, non-toy environment
+wipe:
+	@rm -rf ~/airflow
+	@printf "Wiped AIRFLOW_HOME from system\n"
