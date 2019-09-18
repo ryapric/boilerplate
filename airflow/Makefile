@@ -78,7 +78,8 @@ get-status-reference-dag-rest:
 # Take this one out if going into an actual, non-toy environment
 wipe:
 	@rm -rf ~/airflow
-	@printf "Wiped AIRFLOW_HOME from system\n"
+	@rm -rf venv/
+	@printf "Wiped $AIRFLOW_HOME from system\n"
 
 TEST:
 	return 1 || echo 'all good'
