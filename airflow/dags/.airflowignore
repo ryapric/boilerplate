@@ -1,0 +1,2 @@
+# .airflowignore relies on Regex, not globbing, and will throw errors if you try and use the latter incorrectly
+.*\.sh$
