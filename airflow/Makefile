@@ -61,7 +61,7 @@ start:
 stop:
 	@pkill -f airflow
 #	@pkill -f airflow || printf "No Airflow processes to stop\n"
-	printf "Terminated all Airflow processes\n"
+	@printf "Terminated all Airflow processes\n"
 
 # Trigger a manual run of the example DAG via Airflow's REST API
 trigger-reference-dag-rest:
