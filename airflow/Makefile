@@ -5,8 +5,9 @@ SHELL = /usr/bin/env bash
 # Also set AIRFLOW_HOME
 VENV-ACT = source venv/bin/activate
 
-# Note that setting AIRFLOW_HOME to anything within the venv seems to silently kill the webserver on run, so just let it stay default
+# Note that setting AIRFLOW_HOME to anything within the venv seems to silently kill the webserver on run, so just set it as the default
 # This only seems to be true when doing this the way the Makefile is configured
+AIRFLOW_HOME = ~/airflow
 
 
 # Default target just restarts daemon processes
@@ -42,14 +43,17 @@ install: venv-new
 init:
 	@printf "Initializing Airflow metadata database...\n"
 	@$(VENV-ACT) && \
-	mkdir -p ~/airflow/dags && \
+	mkdir -p $(AIRFLOW_HOME)/dags && \
 	airflow initdb && \
-	sed -i 's/load_examples = True/load_examples = False/g' ~/airflow/airflow.cfg && \
-	sed -i 's/dags_are_paused_at_creation = True/dags_are_paused_at_creation = False/g' ~/airflow/airflow.cfg && \
+	sed -i 's/load_examples = True/load_examples = False/g' $(AIRFLOW_HOME)/airflow.cfg && \
+	sed -i 's/dags_are_paused_at_creation = True/dags_are_paused_at_creation = False/g' $(AIRFLOW_HOME)/airflow.cfg && \
 	airflow resetdb -y
-	@cp dags/* ~/airflow/dags/
-	@chmod +x ~/airflow/dags/example_shell_script.sh
-	@cp dags/.airflowignore ~/airflow/dags/
+	@make -s add-dags
+	@chmod +x $(AIRFLOW_HOME)/dags/example_shell_script.sh
+
+add-dags:
+	@ln -fs $${PWD}/dags/* $(AIRFLOW_HOME)/dags/
+	@ln -fs $${PWD}/dags/.airflowignore $(AIRFLOW_HOME)/dags/
 
 webserver:
 	@$(VENV-ACT) && \
@@ -86,6 +90,6 @@ get-status-reference-dag-rest:
 
 # Take this one out if going into an actual, non-toy environment
 wipe:
-	@rm -rf ~/airflow
+	@rm -rf $(AIRFLOW_HOME)
 	@rm -rf venv/
-	@printf 'Wiped $$AIRFLOW_HOME & ./venv from system\n'
+	@printf 'Wiped $$AIRFLOW_HOME ($(AIRFLOW_HOME)) & ./venv from system\n'
