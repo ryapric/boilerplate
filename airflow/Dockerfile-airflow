@@ -1,0 +1,43 @@
+# This image contains all of the tooling to support an Airflow deployment in
+# Docker.
+
+FROM python:3.7-buster
+
+ENV AIRFLOW_VERSION=1.10
+
+# Comma-separated (no spaces) list of Airflow Extras; passed to pip
+ENV AIRFLOW_EXTRAS=postgres
+ENV AIRFLOW_HOME=/root/airflow
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Can set an empty variable to allow Airflow to hook into Cloud provider via the
+# instance profile/service account/etc., for permissions
+ENV AIRFLOW_CONN_CLOUD_PROVIDER_PROFILE=
+
+WORKDIR /root
+
+# Add helpful system debug & general utilities
+RUN apt-get update && apt-get install -y \
+		less \
+		nano \
+		htop \
+		nmap \
+		jq \
+	&& rm -rf /var/cache/apt/*
+
+# Install Airflow, and generate placeholder folders with a call to --help
+RUN pip3 install \
+		"apache-airflow[${AIRFLOW_EXTRAS}]==${AIRFLOW_VERSION}.*" \
+		&& rm -rf ${HOME}/.cache/pip \
+	&& airflow --help > /dev/null
+
+# Add DAGs, and your own Airflow config file
+COPY dags/ airflow/dags/
+COPY ./helpers/airflow.cfg /root/airflow/airflow.cfg
+
+EXPOSE 8080
+
+# Default dummy command as placeholder; Scheduler & Webserver containers will
+# provide their own launch commands in docker-compose.yaml
+CMD ["airflow", "--help"]

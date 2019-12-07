@@ -1,2 +1,22 @@
+# Heavy Python garbage
 venv/
-airflow/
+*cache*
+*.pyc
+build/
+dist/
+*egg-info*
+
+# Non-.md READMEs
+README.*
+!README.md
+
+# Coverage files/folders
+*coverage*
+*cov/
+*,cover
+
+# Misc.
+.vscode/
+*.log
+*.zip
+*.tar.gz

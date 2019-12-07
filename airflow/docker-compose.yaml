@@ -1,0 +1,59 @@
+version: "3"
+
+services:
+
+  # Local metadata DB for Airflow; needed for production-quality performance
+  airflow-db:
+    container_name: airflow-db
+    image: postgres:11-alpine
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    restart: always
+    volumes:
+      - airflow-db:/var/lib/postgresql/data
+  
+  airflow-scheduler:
+    container_name: airflow-scheduler
+    image: ryapric/airflow:latest
+    command: sh -c "airflow initdb && airflow scheduler"
+    restart: always
+    tty: true
+    depends_on:
+      - airflow-db
+    volumes:
+      - airflow-logs:/root/airflow/logs
+    # # Optional CloudWatch log config for Airflow's webserver
+    # logging:
+    #   driver: awslogs
+    #   options:
+    #     awslogs-region: us-east-1
+    #     awslogs-group: airflow
+    #     awslogs-stream: airflow-scheduler
+    #     awslogs-create-group: "true" # can also let IaC manage this
+    
+  airflow-webserver:
+    container_name: airflow-webserver
+    image: ryapric/airflow:latest
+    command: airflow webserver -p 8080
+    restart: always
+    tty: true
+    depends_on:
+      - airflow-scheduler
+    ports:
+      - "8080:8080"
+    volumes:
+      - airflow-logs:/root/airflow/logs
+    # # Optional CloudWatch log config for Airflow's scheduler
+    # logging:
+    #   driver: awslogs
+    #   options:
+    #     awslogs-region: us-east-1
+    #     awslogs-group: airflow
+    #     awslogs-stream: airflow-webserver
+    #     awslogs-create-group: "true" # can also let IaC manage this
+
+volumes:
+  airflow-db:
+  airflow-logs:
