@@ -36,6 +36,9 @@ RUN pip3 install \
 COPY dags/ airflow/dags/
 COPY ./helpers/airflow.cfg /root/airflow/airflow.cfg
 
+# Parse the DAG files, to try & catch syntax errors before they get deployed
+RUN set -e; for dag in ${AIRFLOW_HOME}/dags/*.py; do python3 ${dag}; done
+
 EXPOSE 8080
 
 # Default dummy command as placeholder; Scheduler & Webserver containers will
