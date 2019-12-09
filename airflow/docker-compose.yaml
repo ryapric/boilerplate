@@ -10,6 +10,9 @@ services:
       POSTGRES_USER: airflow
       POSTGRES_PASSWORD: airflow
       POSTGRES_DB: airflow
+    # Opened up for debugging, but you should probably close these IRL
+    ports:
+      - "5432:5432"
     restart: always
     volumes:
       - airflow-db:/var/lib/postgresql/data
