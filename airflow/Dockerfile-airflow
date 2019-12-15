@@ -6,7 +6,7 @@ FROM python:3.7-buster
 ENV AIRFLOW_VERSION=1.10
 
 # Comma-separated (no spaces) list of Airflow Extras; passed to pip
-ENV AIRFLOW_EXTRAS=postgres
+ENV AIRFLOW_EXTRAS=postgres,aws,s3
 ENV AIRFLOW_HOME=/root/airflow
 
 ENV DEBIAN_FRONTEND=noninteractive
