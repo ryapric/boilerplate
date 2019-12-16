@@ -14,7 +14,9 @@ from datetime import datetime, timedelta
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
-    'start_date': datetime.now() + timedelta(days = 1) # prevent this from killing itself at startup
+    # Setting a dynamic start_date is considered bad practice, but this will
+    # allow for the scheduler to not kill itself immediately on startup
+    'start_date': datetime.today()
 }
 
 dag = DAG(
