@@ -6,7 +6,6 @@ configuration to work on the serverless Fargate runtime.
 from airflow import DAG
 from airflow.contrib.operators.ecs_operator import ECSOperator
 from datetime import datetime, timedelta
-from textwrap import dedent
 
 
 default_args = {
