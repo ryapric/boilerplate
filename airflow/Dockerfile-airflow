@@ -19,18 +19,19 @@ WORKDIR /root
 
 # Add helpful system debug & general utilities
 RUN apt-get update && apt-get install -y \
-		less \
-		nano \
-		htop \
-		nmap \
-		jq \
-	&& rm -rf /var/cache/apt/*
+        less \
+        nano \
+        htop \
+        nmap \
+        jq \
+    && rm -rf /var/cache/apt/*
 
 # Install Airflow, and generate placeholder folders with a call to --help
 RUN pip3 install \
-		"apache-airflow[${AIRFLOW_EXTRAS}]==${AIRFLOW_VERSION}.*" \
-		&& rm -rf ${HOME}/.cache/pip \
-	&& airflow --help > /dev/null
+        "apache-airflow[${AIRFLOW_EXTRAS}]==${AIRFLOW_VERSION}.*" \
+        && pip3 install airflow-exporter \
+        && rm -rf ${HOME}/.cache/pip \
+    && airflow --help > /dev/null
 
 # Add DAGs, and your own Airflow config file
 COPY dags/ airflow/dags/
