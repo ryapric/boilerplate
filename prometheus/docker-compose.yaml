@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+
+  prometheus:
+    container_name: prometheus
+    build:
+      context: .
+      dockerfile: ./Dockerfile-prometheus
+    image: prometheus:latest
+    ports:
+      - "9090:9090"
+    restart: always
+
+  node_exporter:
+    container_name: node_exporter
+    build:
+      context: .
+      dockerfile: ./Dockerfile-node_exporter
+    image: node_exporter:latest
+    ports:
+      - "9100:9100"
+    restart: always

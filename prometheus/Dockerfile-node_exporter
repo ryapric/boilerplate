@@ -1,0 +1,15 @@
+FROM debian:buster
+
+ARG VER=0.18.1
+
+RUN apt-get update && apt-get install -y curl
+
+RUN curl -L -o prom.tar.gz "https://github.com/prometheus/node_exporter/releases/download/v${VER}/node_exporter-${VER}.linux-amd64.tar.gz"
+
+RUN tar -xzf prom.tar.gz && rm prom.tar.gz
+
+WORKDIR node_exporter-${VER}.linux-amd64
+
+EXPOSE 9100
+
+CMD ["./node_exporter"]

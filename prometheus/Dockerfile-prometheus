@@ -1,0 +1,17 @@
+FROM debian:buster
+
+ARG VER=2.14.0
+
+RUN apt-get update && apt-get install -y curl
+
+RUN curl -L -o prometheus.tar.gz "https://github.com/prometheus/prometheus/releases/download/v${VER}/prometheus-${VER}.linux-amd64.tar.gz"
+
+RUN tar -xzf prometheus.tar.gz && rm prometheus.tar.gz
+
+WORKDIR prometheus-${VER}.linux-amd64
+
+COPY prometheus.yaml prometheus.yaml
+
+EXPOSE 9090
+
+CMD ["./prometheus", "--config.file=prometheus.yaml"]
