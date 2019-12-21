@@ -4,7 +4,10 @@
 *.dll
 *.so
 *.dylib
+
+# Other Go folders
 bin/
+pkg/
 
 
 # Test binary, built with `go test -c`
@@ -15,3 +18,6 @@ bin/
 
 # Dependency directories (remove the comment below to include it)
 vendor/
+
+# .vscode folder (Make target will configure this for you
+.vscode/

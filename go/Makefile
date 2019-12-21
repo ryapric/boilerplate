@@ -1,8 +1,19 @@
-GOPATH := `pwd`
+GOPATH := $$(go env GOPATH)
+
+SHELL = /usr/bin/env bash
 
 build:
-	@printf "Building binaries, from src/* to bin/* ...\n"
-	@GOPATH=$(GOPATH) go build -o bin/mypkg ./src/*
+	@printf "Building binaries...\n"
+	@go build -o $(GOPATH)/bin/mypkg $(GOPATH)/src/mypkg
+
+test:
+	@go test
 
 run:
-	@GOPATH=$(GOPATH) go run src/mypkg/main.go
+	@go run $(GOPATH)/src/mypkg/main.go
+
+# Run on a new host to configure VS Code settings
+vscode-settings:
+	@mkdir -p ./.vscode
+	@cp .vscode-settings.json ./.vscode/settings.json
+	@sed -i "s;GOPATH;$$(pwd);" ./.vscode/settings.json
