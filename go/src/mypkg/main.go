@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	h "mypkg/http"
+	sl "mypkg/slices"
 )
 
 func main() {
@@ -10,6 +11,8 @@ func main() {
 	if err != nil {
 		fmt.Println(x)
 	}
-	h.Client("https://icanhazip.com")
-	h.Serve(":8080")
+
+	fmt.Println(h.Client("https://icanhazip.com"))
+
+	fmt.Println(sl.GetSlice())
 }
