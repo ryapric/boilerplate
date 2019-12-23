@@ -5,10 +5,10 @@ SHELL = /usr/bin/env bash
 
 build:
 	@printf "Building binaries...\n"
-	@GOPATH=$(GOPATH) go build -o $(GOPATH)/bin/$(PKGNAME) $(GOPATH)/src/$(PKGNAME)
+	@GOPATH=$(GOPATH) go build ./...
 
 test:
-	@GOPATH=$(GOPATH) go test
+	@GOPATH=$(GOPATH) go test ./...
 
 run:
 	@GOPATH=$(GOPATH) go run $(GOPATH)/src/$(PKGNAME)/main.go
