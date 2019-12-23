@@ -7,12 +7,6 @@ import (
 )
 
 func main() {
-	x, err := fmt.Println("waddup")
-	if err != nil {
-		fmt.Println(x)
-	}
-
-	fmt.Println(h.Client("https://icanhazip.com"))
-
+	fmt.Println(h.GetIP())
 	fmt.Println(sl.GetSlice())
 }

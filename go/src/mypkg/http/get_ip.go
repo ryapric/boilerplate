@@ -6,9 +6,9 @@ import (
 	"net/http"
 )
 
-// Client is exported, so should be documented in this string
-func Client(url string) {
-	resp, err := http.Get(url)
+// GetIP is exported, so should be documented in this string
+func GetIP() string {
+	resp, err := http.Get("https://icanhazip.com")
 	if err != nil {
 		panic(err)
 	}
@@ -17,11 +17,14 @@ func Client(url string) {
 	fmt.Println("\nResponse status:", resp.Status)
 
 	scanner := bufio.NewScanner(resp.Body)
-	for i := 0; scanner.Scan() && i < 1; i++ {
-		fmt.Printf("My IP: %s\n\n", scanner.Text())
+	out := ""
+	for scanner.Scan() {
+		out += scanner.Text()
 	}
 
 	if err := scanner.Err(); err != nil {
 		panic(err)
 	}
+
+	return out
 }
