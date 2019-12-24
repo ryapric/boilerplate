@@ -14,7 +14,7 @@ scrape_configs:
     static_configs:
       - targets: ['node_exporter:9100']
 
-# Empty, to use the defaults
-alertmanager_config:
-  static_configs:
-    - targets: ['alertmanager:9093']
+alerting:
+  alertmanagers:
+    - static_configs:
+      - targets: ['alertmanager:9093']

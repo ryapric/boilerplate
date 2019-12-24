@@ -11,7 +11,10 @@ RUN tar -xzf ${PKG}.tar.gz && rm ${PKG}.tar.gz
 
 WORKDIR ${PKG}-${VER}.linux-amd64
 
+# Add & validate config file(s) so build can fail gracefully
 COPY prometheus.yaml prometheus.yaml
+RUN rm *.yml \
+    && ./promtool check config *.yaml
 
 EXPOSE 9090
 

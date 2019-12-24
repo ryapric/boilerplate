@@ -11,6 +11,11 @@ RUN tar -xzf ${PKG}.tar.gz && rm ${PKG}.tar.gz
 
 WORKDIR ${PKG}-${VER}.linux-amd64
 
+# Add & validate config file(s) so build can fail gracefully
+COPY alertmanager.yaml alertmanager.yaml
+RUN rm *.yml \
+    && ./amtool check-config *.yaml
+
 EXPOSE 9093
 
-CMD ["./alertmanager"]
+CMD ["./alertmanager", "--config.file=alertmanager.yaml"]
