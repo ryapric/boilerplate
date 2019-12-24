@@ -13,15 +13,11 @@ set -e
 # Pin docker-compose version with a leading major-minor, to prevent any breakage
 export DOCKER_COMPOSE_VER=1.24
 
-# docker-compose venv path. Defaults to `.`
-if [[ -z "$1" ]]; then
-  export VENV_HOME='.'
-else
-  export VENV_HOME="$1"
-fi
+# docker-compose venv home path. Defaults to `.`
+VENV_HOME="${1:-.}"
 
 # Install Docker, if it's not already installed
-if ! command -v docker >/dev/null; then
+if ! command -v docker; then
   curl https://get.docker.com | bash
   sudo usermod -aG docker "${USER}"
 fi
