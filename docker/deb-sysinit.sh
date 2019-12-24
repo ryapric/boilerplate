@@ -33,7 +33,7 @@ if ! command -v pip3; then
     python3-pip \
     python3-venv
 fi
-if ! command -v docker-compose; then
+if ! command -v docker-compose && ! find "${VENV_HOME}/venv/bin" -name docker-compose; then
   sudo apt-get install -y \
     libffi-dev \
     libssl-dev
