@@ -1,7 +1,7 @@
 FROM debian:buster
 
-ARG PKG=node_exporter
-ARG VER=0.18.1
+ARG PKG=alertmanager
+ARG VER=0.20.0
 
 RUN apt-get update && apt-get install -y curl
 
@@ -11,6 +11,6 @@ RUN tar -xzf ${PKG}.tar.gz && rm ${PKG}.tar.gz
 
 WORKDIR ${PKG}-${VER}.linux-amd64
 
-EXPOSE 9100
+EXPOSE 9093
 
-CMD ["./node_exporter"]
+CMD ["./alertmanager"]
