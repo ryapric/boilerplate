@@ -1,3 +1,8 @@
+# You likely don't want to run all of these services on the same host (beause
+# that's pointless), but this is how their configs would look individually.
+# Includes blocks for applications that are instrumented for Prometheus to hit
+# in the wild.
+
 version: "3"
 
 services:
@@ -20,4 +25,14 @@ services:
     image: node_exporter:latest
     ports:
       - "9100:9100"
+    restart: always
+
+  alertmanager:
+    container_name: alertmanager
+    build:
+      context: .
+      dockerfile: ./Dockerfile-alertmanager
+    image: alertmanager:latest
+    ports:
+      - "9093:9093"
     restart: always
