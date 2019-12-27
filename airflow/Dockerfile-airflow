@@ -7,15 +7,13 @@ ENV AIRFLOW_VERSION=1.10
 
 # Comma-separated (no spaces) list of Airflow Extras; passed to pip
 ENV AIRFLOW_EXTRAS=postgres,aws,s3
-ENV AIRFLOW_HOME=/root/airflow
+ENV AIRFLOW_HOME=/home/airflow/airflow
 
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Can set an empty variable to allow Airflow to hook into Cloud provider via the
 # instance profile/service account/etc., for permissions
 ENV AIRFLOW_CONN_CLOUD_PROVIDER_PROFILE=
-
-WORKDIR /root
 
 # Add helpful system debug & general utilities
 RUN apt-get update && apt-get install -y \
@@ -26,16 +24,21 @@ RUN apt-get update && apt-get install -y \
         jq \
     && rm -rf /var/cache/apt/*
 
+# Add non-root airflow user
+RUN groupadd -r airflow \
+    && useradd -r -m -g airflow airflow
+USER airflow
+ENV PATH /home/airflow/.local/bin:${PATH}
+
 # Install Airflow, and generate placeholder folders with a call to --help
-RUN pip3 install \
+RUN pip3 install --user \
         "apache-airflow[${AIRFLOW_EXTRAS}]==${AIRFLOW_VERSION}.*" \
-        && pip3 install airflow-exporter \
         && rm -rf ${HOME}/.cache/pip \
     && airflow --help > /dev/null
 
 # Add DAGs, and your own Airflow config file
-COPY dags/ airflow/dags/
-COPY ./helpers/airflow.cfg /root/airflow/airflow.cfg
+COPY ./dags/ ${AIRFLOW_HOME}/dags/
+COPY ./helpers/airflow.cfg ${AIRFLOW_HOME}/airflow.cfg
 
 # Parse the DAG files, to try & catch syntax errors before they get deployed
 RUN set -e; for dag in ${AIRFLOW_HOME}/dags/*.py; do python3 ${dag}; done
