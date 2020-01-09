@@ -1,0 +1,13 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Install system tools
+      apt:
+        name:
+          - bash
+          - jq
+          - less
+          - man
+          - nano
+          - shellcheck
+        state: latest
