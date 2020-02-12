@@ -1,0 +1,40 @@
+{
+  "builders": [{
+    "type": "virtualbox-iso",
+    "guest_os_type": "Ubuntu_64",
+    "iso_url": "https://mirror.us.leaseweb.net/ubuntu-cdimage/xubuntu/releases/18.04/release/xubuntu-18.04-desktop-amd64.iso",
+    "iso_checksum": "1b0bcbad9853cf7a4cade6324e6622f7",
+    "iso_checksum_type": "md5",
+    "ssh_username": "packer",
+    "ssh_password": "packer",
+    "shutdown_command": "echo 'packer' | sudo -S shutdown -P now",
+    "boot_command": [
+      "<esc><wait>",
+      "<esc><wait>",
+      "<enter><wait>",
+      "/install/vmlinuz<wait>",
+      " auto<wait>",
+      " console-setup/ask_detect=false<wait>",
+      " console-setup/layoutcode=us<wait>",
+      " console-setup/modelcode=pc105<wait>",
+      " debconf/frontend=noninteractive<wait>",
+      " debian-installer=en_US<wait>",
+      " fb=false<wait>",
+      " initrd=/install/initrd.gz<wait>",
+      " kbd-chooser/method=us<wait>",
+      " keyboard-configuration/layout=USA<wait>",
+      " keyboard-configuration/variant=USA<wait>",
+      " locale=en_US<wait>",
+      " netcfg/get_domain=vm<wait>",
+      " netcfg/get_hostname=vagrant<wait>",
+      " grub-installer/bootdev=/dev/sda<wait>",
+      " noapic<wait>",
+      " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg<wait>",
+      " -- <wait>",
+      "<enter><wait>"
+    ],
+    "boot_wait": "10s",
+    "http_directory": "http",
+    "disk_size": "16000"
+  }]
+}
