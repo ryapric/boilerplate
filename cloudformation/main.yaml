@@ -1,0 +1,9 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Example EC2 template
+Resources:
+  MyEC2Instance:
+    Type: "AWS::EC2::Instance"
+    Properties: 
+      ImageId: "ami-098dce2d49ef14294" # Latest Ubuntu 18.04; https://cloud-images.ubuntu.com/locator/ec2/
+      InstanceType: t2.micro
+      KeyName: some-keyname-in-aws
