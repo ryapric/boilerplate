@@ -21,13 +21,6 @@ resource "aws_subnet" "main" {
 resource "aws_security_group" "main" {
   vpc_id = aws_vpc.main.id
 
-  ingress {
-    protocol    = "tcp"
-    # cidr_blocks = var.whitelisted_ips
-    from_port   = 80
-    to_port     = 80
-  }
-
   # SSH access for deployment host
   ingress {
     protocol    = "tcp"
@@ -50,14 +43,9 @@ resource "aws_security_group" "main" {
   )
 }
 
-resource "aws_eip" "app" {
-  instance = aws_instance.app.id
+resource "aws_eip" "main" {
+  instance = aws_instance.main.id
   vpc      = true
-
-  # Output IP to local file for SSH and app deployment
-  provisioner "local-exec" {
-    command = "echo ${self.public_ip} > instance_ip.txt"
-  }
 }
 
 resource "aws_internet_gateway" "main" {
@@ -86,8 +74,4 @@ resource "aws_route_table" "main" {
 resource "aws_route_table_association" "rt-to-subnet-main" {
   subnet_id      = aws_subnet.main.id
   route_table_id = aws_route_table.main.id
-}
-
-output "app_ip" {
-  value = aws_eip.app.public_ip
 }
