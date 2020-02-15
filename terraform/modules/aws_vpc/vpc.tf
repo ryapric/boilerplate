@@ -1,3 +1,7 @@
+# This config file creates all the pieces of an AWS VPC from scratch. You don't
+# necessarily need this in real life (maybe you're using existing IDs for each),
+# but this allows you to get started with this boilerplate subrepo quickly.
+
 resource "aws_vpc" "main" {
   cidr_block = "10.0.0.0/16"
 
@@ -41,11 +45,6 @@ resource "aws_security_group" "main" {
     var.default_tags,
     {}
   )
-}
-
-resource "aws_eip" "main" {
-  instance = aws_instance.main.id
-  vpc      = true
 }
 
 resource "aws_internet_gateway" "main" {

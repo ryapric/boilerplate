@@ -12,15 +12,29 @@ provider "aws" {
   version = ">= 2.47"
 }
 
-# Call a module. You can also have these be in a separate repo entirely
-module "main" {
-  source = "./modules/some-module"
+# Call modules. You can also have these be in a separate repo entirely, and
+# refer to them by their URL.
+module "aws_vpc" {
+  source = "./modules/aws_vpc"
 
-  # Pass variables into the module. These will also come from a `.tfvars` file,
-  # passed in at runtime from the CLI
+  # Pass variables into the module. These will either come from a `.tfvars`
+  # file, passed in at runtime from the CLI, or from another called module, as
+  # you can see in the next caller.
   aws_region = var.aws_region
   
   tf_host_ip = var.tf_host_ip
+  
+  default_tags = var.default_tags
+}
+
+# Another module call, passing in the outputs from the first one.
+module "aws_compute" {
+  source = "./modules/aws_compute"
+
+  aws_region = var.aws_region
+
+  subnet_id          = module.aws_vpc.subnet_id
+  security_group_ids = module.aws_vpc.security_group_ids
 
   default_tags = var.default_tags
 }

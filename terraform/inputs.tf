@@ -6,4 +6,6 @@ variable "default_tags" {
 
 variable "tf_host_ip" {
   description = ""
+  # Dummy default to prevent unintended access
+  default = "127.0.0.1"
 }
