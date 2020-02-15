@@ -20,8 +20,8 @@ resource "aws_instance" "main" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = "t2.micro"
 
-  # vpc_security_group_ids = [aws_security_group.main.id]
-  # subnet_id = aws_subnet.main.id
+  subnet_id              = aws_subnet.main.id
+  vpc_security_group_ids = [aws_security_group.main.id]
 
   key_name = aws_key_pair.pubkey.key_name
 

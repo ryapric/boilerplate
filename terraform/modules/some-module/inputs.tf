@@ -8,12 +8,10 @@ variable "default_tags" {
 }
 
 variable "privkey_path" {
-  type    = "string"
   default = "~/.ssh/id_rsa"
 }
 
 variable "pubkey_path" {
-  type    = "string"
   default = "~/.ssh/id_rsa.pub"
 }
 
