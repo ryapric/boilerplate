@@ -25,6 +25,16 @@ resource "aws_subnet" "main" {
 resource "aws_security_group" "main" {
   vpc_id = aws_vpc.main.id
 
+  # Ping access. ICMP is weird and doesn't use "ports" like other protocols do,
+  # so from_port and to_port are 8 & 0, respectively
+  # https://github.com/hashicorp/terraform/issues/1313#issuecomment-107619807
+  ingress {
+    protocol    = "icmp"
+    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = 8
+    to_port     = 0
+  }
+
   # SSH access for deployment host
   ingress {
     protocol    = "tcp"
