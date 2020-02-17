@@ -38,3 +38,7 @@ module "aws_compute" {
 
   default_tags = var.default_tags
 }
+
+# module "aws_fargate" {
+#   source = "./modules/aws_fargate"
+# }
