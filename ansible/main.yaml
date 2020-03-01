@@ -1,4 +1,4 @@
-- hosts: all
+- hosts: all # you can refer to group names from inventory file, as well
   tasks:
     - name: Install core system/development tools
       become: yes
