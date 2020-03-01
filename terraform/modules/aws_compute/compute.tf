@@ -23,6 +23,8 @@ resource "aws_instance" "main" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = "t2.micro"
 
+  user_data = var.user_data
+
   subnet_id              = var.subnet_id
   vpc_security_group_ids = var.security_group_ids
   
@@ -32,7 +34,7 @@ resource "aws_instance" "main" {
 
   tags = merge(
     var.default_tags,
-    {Name = "tf-created"},
+    { Name = var.instance_nametag },
     {}
   )
 }

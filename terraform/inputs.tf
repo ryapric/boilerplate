@@ -9,10 +9,15 @@ variable "default_tags" {
 
 variable "tf_host_ip" {
   description = "The deployment host IP, for use in cloud firewalls (like Security Groups), etc."
-  # Dummy default to prevent unintended access
-  default = "127.0.0.1"
+  default     = "127.0.0.1" # Dummy default to prevent unintended access
 }
 
 variable "instance_count" {
   description = "Number of identical instances to deploy"
+  default     = 1
+}
+
+variable "user_data" {
+  description = "User Data (startup script) to run on VMs at first boot"
+  default     = ""
 }

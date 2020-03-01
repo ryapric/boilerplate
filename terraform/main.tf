@@ -13,7 +13,7 @@ provider "aws" {
 }
 
 # Call modules. You can also have these be in a separate repo entirely, and
-# refer to them by their URL.
+# refer to them by their URL, and even their tag/commit hash.
 module "aws_vpc" {
   source = "./modules/aws_vpc"
 
@@ -32,6 +32,8 @@ module "aws_compute" {
   source = "./modules/aws_compute"
 
   instance_count = var.instance_count
+
+  instance_nametag = "master_tf-created"
 
   aws_region = var.aws_region
 

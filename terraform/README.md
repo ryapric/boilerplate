@@ -10,8 +10,10 @@ identical no matter your provider of choice.
 Layout
 ------
 
-A Terraform repo with good modularity & reusability should be strucuted as this
-one is, with the option to also have modules in separate repos:
+A Terraform repo with good modularity & reusability should be strucured somewhat
+this one is, with the option to also have modules in separate repos. Please be
+sure to read [Terraform's suggestion on when and how to use
+modules](https://www.terraform.io/docs/modules/index.html).
 
 - `backends/`: Backend configuration variables to dynamically build
   cross-environment backends for remote state storage. Stored in `.tfvars` files
@@ -19,13 +21,18 @@ one is, with the option to also have modules in separate repos:
 
 - `modules/`: Contains additional subfolders for Terraform modules. These can be
   organized however you see fit, but need at least a `main.tf` (or similar), an
-  `inputs.tf` for input variable expectations, and an `outputs.tf` for exporting
-  output values to the caller. These subfolders can also each be in their own
-  separate repo, and your caller can reference the repo URL in the `source`
-  field. They are only local here for structure/content reference.
+  `inputs.tf` or `variables.tf` for input variable expectations, and an
+  `outputs.tf` for exporting output values to the caller. These subfolders can
+  also each be in their own separate repo, and your caller can reference the
+  repo URL in the `source` field. They are only local here for structure/content
+  reference.
 
 - `tfvars/`: Variables to pass to called modules, stored in `.tfvars` files by
   environment name.
+
+- `config-files/`: Folder with configuration files, startup scripts, etc. Please
+  read the section titled "Infrastructure-as-Code and Configuration Management"
+  below for a cautionary word on this.
 
 How to use
 ----------
@@ -58,3 +65,22 @@ have networking resources available.
 configuration (in the `backends` folder). If you just want to use local state to
 play around, then make sure the `backend "..." {}` section is commented out at
 the top of `main.tf`, and just run the vanilla `terraform init` instead.
+
+Infrastructure-as-Code and Configuration Management
+---------------------------------------------------
+
+Terraform is *explicitly discouraged* from being used for both infrastructure
+automation, as well as configuration management. While there is some reasonable
+flexibility to this depending on the deployed resources, things like virtual
+machines should rely exclusively on separate tooling, unless environment
+constraints prevent this. Options for configuration include Hashicorp Packer for
+building pre-configured images, and Ansible/Chef/Puppet for configuring a base
+instance. A notable exception, however, might be configuring a logging/metrics
+agent in a VM's startup script, for example.
+
+Terraform has poor support for validating configuration management (since that's
+not an explicit design goal of the tool); launching a VM with a Terraform
+Provisioner or lengthy startup script has little to no means of communicating
+back to the caller the status of the script execution. It is much better to let
+Terraform manage & report back on what it has explicit visibility & control over
+(infrastructure).

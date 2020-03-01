@@ -24,3 +24,11 @@ variable "security_group_ids" {
 variable "instance_count" {
   description = "Number of identical instances to deploy"
 }
+
+variable "instance_nametag" {
+  description = "Name for instance that will display in the AWS console"
+}
+
+variable "user_data" {
+  description = "User Data (startup script) to run on VMs at first boot"
+}
