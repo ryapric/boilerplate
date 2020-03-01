@@ -20,3 +20,7 @@ variable "security_group_ids" {
   description = "IDs of the Security Groups to attach to the instance"
   type = list
 }
+
+variable "instance_count" {
+  description = "Number of identical instances to deploy"
+}

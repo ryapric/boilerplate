@@ -1,3 +1,3 @@
-output "instance_ip" {
-  value = module.aws_compute.instance_ip
+output "instance_ips" {
+  value = module.aws_compute.instance_ips
 }

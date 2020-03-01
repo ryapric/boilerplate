@@ -17,6 +17,9 @@ data "aws_ami" "ubuntu" {
 }
 
 resource "aws_instance" "main" {
+  # Can optionally pass a `count` value to supported resources
+  count = var.instance_count
+
   ami           = data.aws_ami.ubuntu.id
   instance_type = "t2.micro"
 

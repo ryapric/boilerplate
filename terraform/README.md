@@ -22,7 +22,7 @@ one is, with the option to also have modules in separate repos:
   `inputs.tf` for input variable expectations, and an `outputs.tf` for exporting
   output values to the caller. These subfolders can also each be in their own
   separate repo, and your caller can reference the repo URL in the `source`
-  field.
+  field. They are only local here for structure/content reference.
 
 - `tfvars/`: Variables to pass to called modules, stored in `.tfvars` files by
   environment name.
@@ -31,8 +31,8 @@ How to use
 ----------
 
 You can use all the regular `terraform` commands that you would normally, if
-they're called from the repo top-level. `main.tf` is the primary caller of the
-modules in the `modules` subfolder. Note that `terraform init` 
+they're called from the repo top-level. Note that `main.tf` is the primary
+caller.
 
 A Makefile is also provided for convenience. You *must* pass Make targets with
 an `ENV` variable as follows:
@@ -46,7 +46,8 @@ already defined in `main.tf`, as `module.<name-you-gave-it>`:
     make apply ENV=dev TARGET=module.aws_compute
 
 The way the Makefile is currently set up, omitting the `TARGET` variable will
-*only create* the VPC resources. This is so whatever you choose to deploy will
+*only operate on* the VPC resources. Additionally, any `TARGET` passed will
+still create those VPC resources. This is so whatever you choose to deploy will
 have networking resources available.
 
 - Note that using Terraform's `-target` option *is not recommended for real

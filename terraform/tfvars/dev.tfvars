@@ -1,5 +1,7 @@
 aws_region = "ca-central-1"
 
 default_tags = {
-  "Email" = "ryapric@gmail.com"
+  "Owner" = "ryan.price@slalom.com"
 }
+
+instance_count = 2

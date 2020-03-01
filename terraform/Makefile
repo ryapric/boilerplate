@@ -38,8 +38,7 @@ plan:
 		$(COMMON_ARGS) \
 		$(CREATE_ARGS) \
 		-target=module.aws_vpc \
-		$(TARGETARG) \
-		-out="./out.tfplan"
+		$(TARGETARG)
 
 apply:
 	@terraform apply \

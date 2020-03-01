@@ -31,6 +31,8 @@ module "aws_vpc" {
 module "aws_compute" {
   source = "./modules/aws_compute"
 
+  instance_count = var.instance_count
+
   aws_region = var.aws_region
 
   subnet_id          = module.aws_vpc.subnet_id
