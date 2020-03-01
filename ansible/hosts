@@ -1,0 +1,11 @@
+# You can call this file whatever you want, but the default file location is at
+# `/etc/ansible/hosts`, so I'm calling it `hosts`. You can point to this file at
+# run time with the `-i` flag. This file can be in INI or YAML format, but while
+# the YAML format is more powerful to programmatically edit, this INI format is
+# much easier to read and work with.
+
+# You can lable groups of targets/hosts in INI sections
+[apps]
+1.1.1.1
+2.2.2.2
+3.3.3.3

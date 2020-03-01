@@ -1,9 +1,0 @@
-version: "3"
-
-services:
-  ansible:
-    container_name: ansible
-    build:
-      dockerfile: ./Dockerfile
-      context: .
-    image: ansible-demo:latest
