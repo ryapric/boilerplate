@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "EC2 resource(s)"
+
+Parameters:
+  KeyName:
+    ConstraintDescription: "Must be the name of an existing EC2 KeyPair."
+    Description: "Name of an existing EC2 KeyPair to enable SSH access to the instance(s)"
+    Type: "AWS::EC2::KeyPair::KeyName"
+
+Resources:
+
+  EC2InstanceMain:
+    Type: "AWS::EC2::Instance"
+    Properties: 
+      ImageId: "ami-064efdb82ae15e93f" # Latest Ubuntu 18.04 in ca-central-1; https://cloud-images.ubuntu.com/locator/ec2/
+      InstanceType: t2.micro
+      # `Ref` block used here, for example
+      KeyName: !Ref KeyName
+      SecurityGroupIds:
+        - !ImportValue ryanprice-vpc-SecurityGroupSSH
+      SubnetId: !ImportValue ryanprice-vpc-PublicSubnetID
+      # NetworkInterfaces:
+      #   - AssociatePublicIpAddress: "true"
+      #     DeviceIndex: "0"
+      #     SubnetId: !ImportValue ryanprice-vpc-PublicSubnetID
+      Tags:
+        - Key:   "Name"
+          Value: "cfn-created"

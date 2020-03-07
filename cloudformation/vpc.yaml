@@ -1,0 +1,128 @@
+# God, this is old
+AWSTemplateFormatVersion: "2010-09-09"
+# Friendly description
+Description: "VPC for all non-default resources"
+
+# # Parameters are where you define the dynamic blocks of your template, which you
+# # can refer to later using `Ref` blocks
+# Parameters:
+#   CidrBlockVar:
+#     ConstraintDescription: "Must be a valid IPv4 CIDR"
+#     Description: "IPv4 CIDR for the VPC"
+#     Type: "AWS::EC2::VPC::CidrBlock"
+
+# Actual resources exist in the Resources block
+Resources:
+
+  # The next top-level key is the friendly name you give to the resource
+  VPC:
+    Type: "AWS::EC2::VPC"
+    Properties:
+      CidrBlock: "10.0.0.0/16"
+      # CidrBlock: !Ref CidrBlockVar
+  
+  PublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref "VPC"
+      CidrBlock: "10.0.1.0/24"
+
+  PrivateSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref "VPC"
+      CidrBlock: "10.0.2.0/24"
+
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+
+  VPCGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref "VPC"
+      InternetGatewayId: !Ref "InternetGateway"
+
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref "VPC"
+
+  PublicRoute:
+    Type: AWS::EC2::Route
+    DependsOn: VPCGatewayAttachment
+    Properties:
+      RouteTableId: !Ref "PublicRouteTable"
+      DestinationCidrBlock: "0.0.0.0/0"
+      GatewayId: !Ref "InternetGateway"
+
+  PrivateRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref "VPC"
+
+  PrivateRoute:
+    Type: AWS::EC2::Route
+    DependsOn: VPCGatewayAttachment
+    Properties:
+      RouteTableId: !Ref "PublicRouteTable"
+      DestinationCidrBlock: "0.0.0.0/0"
+      GatewayId: !Ref "InternetGateway"
+
+  PublicSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref "PublicSubnet"
+      RouteTableId: !Ref "PublicRouteTable"
+
+  PublicSubnetNetworkAclAssociation:
+    Type: AWS::EC2::SubnetNetworkAclAssociation
+    Properties:
+      SubnetId: !Ref "PublicSubnet"
+      NetworkAclId: !GetAtt "VPC.DefaultNetworkAcl"
+
+  PrivateSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref "PrivateSubnet"
+      RouteTableId: !Ref "PublicRouteTable"
+
+  PrivateSubnetNetworkAclAssociation:
+    Type: AWS::EC2::SubnetNetworkAclAssociation
+    Properties:
+      SubnetId: !Ref "PrivateSubnet"
+      NetworkAclId: !GetAtt "VPC.DefaultNetworkAcl"
+
+  SecurityGroupSSH:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: "Enable SSH access via port 22"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: "22"
+          ToPort: "22"
+          CidrIp: "127.0.0.1/0"
+
+# Outputs are how you spit out values to use outside of the template directly,
+# e.g. referring to the VPC ID in another stack (you'll see this in the EC2
+# example template)
+Outputs:
+  VPCID:
+    Description: "VPC ID"
+    Value: !Ref VPC
+    Export:
+      Name: !Sub "${AWS::StackName}-VPCID"
+  PublicSubnetID:
+    Description: Public Subnet ID
+    Value: !Ref PublicSubnet
+    Export:
+      Name: !Sub "${AWS::StackName}-PublicSubnetID"
+  PrivateSubnetID:
+    Description: Private Subnet ID
+    Value: !Ref PrivateSubnet
+    Export:
+      Name: !Sub "${AWS::StackName}-PrivateSubnetID"
+  SecurityGroupSSH:
+    Description: SG ID allowing SSH access
+    Value: !Ref SecurityGroupSSH
+    Export:
+      Name: !Sub "${AWS::StackName}-SecurityGroupSSH"
