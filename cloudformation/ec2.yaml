@@ -19,10 +19,6 @@ Resources:
       SecurityGroupIds:
         - !ImportValue ryanprice-vpc-SecurityGroupSSH
       SubnetId: !ImportValue ryanprice-vpc-PublicSubnetID
-      # NetworkInterfaces:
-      #   - AssociatePublicIpAddress: "true"
-      #     DeviceIndex: "0"
-      #     SubnetId: !ImportValue ryanprice-vpc-PublicSubnetID
       Tags:
         - Key:   "Name"
           Value: "cfn-created"
