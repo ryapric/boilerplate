@@ -16,9 +16,11 @@ Resources:
       InstanceType: t2.micro
       # `Ref` block used here, for example
       KeyName: !Ref KeyName
+      # !ImportValue is how you lookup exported values from other Stacks'
+      # Outputs. You look them up directly by their declared output name.
       SecurityGroupIds:
-        - !ImportValue ryanprice-vpc-SecurityGroupSSH
-      SubnetId: !ImportValue ryanprice-vpc-PublicSubnetID
+        - !ImportValue vpc-SecurityGroupSSH
+      SubnetId: !ImportValue vpc-PublicSubnetID
       Tags:
         - Key:   "Name"
           Value: "cfn-created"

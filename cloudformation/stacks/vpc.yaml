@@ -24,20 +24,23 @@ Resources:
     Properties:
       CidrBlock: "10.0.0.0/16"
       # CidrBlock: !Ref CidrBlockVar
+      Tags:
+        - Key:   "Name"
+          Value: "ryanprice-vpc"
   
   # There are SO MANY PIECES to a VPC. I've done this before for Terraform, but
   # it never gets any prettier
   PublicSubnet:
     Type: AWS::EC2::Subnet
     Properties:
-      VpcId: !Ref "VPC"
+      VpcId: !Ref VPC
       CidrBlock: "10.0.1.0/24"
       MapPublicIpOnLaunch: "true"
 
   PrivateSubnet:
     Type: AWS::EC2::Subnet
     Properties:
-      VpcId: !Ref "VPC"
+      VpcId: !Ref VPC
       CidrBlock: "10.0.2.0/24"
 
   InternetGateway:
@@ -46,58 +49,58 @@ Resources:
   VPCGatewayAttachment:
     Type: AWS::EC2::VPCGatewayAttachment
     Properties:
-      VpcId: !Ref "VPC"
-      InternetGatewayId: !Ref "InternetGateway"
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref InternetGateway
 
   PublicRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
-      VpcId: !Ref "VPC"
+      VpcId: !Ref VPC
 
   PublicRoute:
     Type: AWS::EC2::Route
     DependsOn: VPCGatewayAttachment
     Properties:
-      RouteTableId: !Ref "PublicRouteTable"
+      RouteTableId: !Ref PublicRouteTable
       DestinationCidrBlock: "0.0.0.0/0"
-      GatewayId: !Ref "InternetGateway"
+      GatewayId: !Ref InternetGateway
+
+  PublicSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet
+      RouteTableId: !Ref PublicRouteTable
+
+  PublicSubnetNetworkAclAssociation:
+    Type: AWS::EC2::SubnetNetworkAclAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet
+      NetworkAclId: !GetAtt VPC.DefaultNetworkAcl
 
   PrivateRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
-      VpcId: !Ref "VPC"
+      VpcId: !Ref VPC
 
   PrivateRoute:
     Type: AWS::EC2::Route
     DependsOn: VPCGatewayAttachment
     Properties:
-      RouteTableId: !Ref "PublicRouteTable"
+      RouteTableId: !Ref PrivateRouteTable
       DestinationCidrBlock: "0.0.0.0/0"
-      GatewayId: !Ref "InternetGateway"
-
-  PublicSubnetRouteTableAssociation:
-    Type: AWS::EC2::SubnetRouteTableAssociation
-    Properties:
-      SubnetId: !Ref "PublicSubnet"
-      RouteTableId: !Ref "PublicRouteTable"
-
-  PublicSubnetNetworkAclAssociation:
-    Type: AWS::EC2::SubnetNetworkAclAssociation
-    Properties:
-      SubnetId: !Ref "PublicSubnet"
-      NetworkAclId: !GetAtt "VPC.DefaultNetworkAcl"
+      GatewayId: !Ref InternetGateway
 
   PrivateSubnetRouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref "PrivateSubnet"
-      RouteTableId: !Ref "PublicRouteTable"
+      SubnetId: !Ref PrivateSubnet
+      RouteTableId: !Ref PublicRouteTable
 
   PrivateSubnetNetworkAclAssociation:
     Type: AWS::EC2::SubnetNetworkAclAssociation
     Properties:
-      SubnetId: !Ref "PrivateSubnet"
-      NetworkAclId: !GetAtt "VPC.DefaultNetworkAcl"
+      SubnetId: !Ref PrivateSubnet
+      NetworkAclId: !GetAtt VPC.DefaultNetworkAcl
 
 
   # Not strictly a VPC resource, but SG created here for centrality's sake, so
@@ -114,8 +117,10 @@ Resources:
           CidrIp: !Ref HostIP
 
 # Outputs are how you spit out values to use outside of the template directly,
-# e.g. referring to the VPC ID in another stack (you'll see this in the EC2
-# example template)
+# e.g. referring to the VPC ID in another stack (you'll see this used in the EC2
+# example template). I can't find the docs that say it, but I bet these are
+# account-level unique, so be sure to tack the stack name on anything you
+# Export!
 Outputs:
   VPCID:
     Description: "VPC ID"
