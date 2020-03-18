@@ -103,18 +103,29 @@ Resources:
       NetworkAclId: !GetAtt VPC.DefaultNetworkAcl
 
 
-  # Not strictly a VPC resource, but SG created here for centrality's sake, so
-  # the EC2 instance(s) can use it
+  # Not strictly VPC resources, but SGs created here for centrality's sake, so
+  # resource(s) can use them
   SecurityGroupSSH:
-    Type: 'AWS::EC2::SecurityGroup'
+    Type: "AWS::EC2::SecurityGroup"
     Properties:
-      GroupDescription: "Enable SSH access via port 22"
+      GroupDescription: "Enable SSH access via port 22, from deployment host"
       VpcId: !Ref VPC
       SecurityGroupIngress:
-        - IpProtocol: tcp
+        - IpProtocol: "tcp"
           FromPort: "22"
           ToPort: "22"
           CidrIp: !Ref HostIP
+
+  SecurityGroupHTTP:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: "Enable HTTP access via port 22"
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: "tcp"
+          FromPort: "80"
+          ToPort: "80"
+          CidrIp: "0.0.0.0/0"
 
 # Outputs are how you spit out values to use outside of the template directly,
 # e.g. referring to the VPC ID in another stack (you'll see this used in the EC2
@@ -142,3 +153,8 @@ Outputs:
     Value: !Ref SecurityGroupSSH
     Export:
       Name: !Sub "${AWS::StackName}-SecurityGroupSSH"
+  SecurityGroupHTTP:
+    Description: "SG ID allowing HTTP access"
+    Value: !Ref SecurityGroupHTTP
+    Export:
+      Name: !Sub "${AWS::StackName}-SecurityGroupHTTP"

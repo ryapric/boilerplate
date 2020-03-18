@@ -1,0 +1,54 @@
+# See link for a fuller example, with load balancing etc.:
+# https://github.com/awslabs/aws-cloudformation-templates/blob/master/aws/services/ECS/FargateLaunchType
+
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Fargate cluster, service, and task definition(s)"
+
+Resources:
+
+  # The cluster and other resources could be put into their own Stack, as well
+  FargateCluster:
+    Type: "AWS::ECS::Cluster"
+    Properties:
+      ClusterName: nginx-fargate
+
+  # Task Definitions are how you define the container runtimes
+  TaskDefinition:
+    Type: "AWS::ECS::TaskDefinition"
+    Properties:
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - "FARGATE"
+      Cpu: "256"
+      Memory: "512"
+      ContainerDefinitions:
+        - Name: "nginx"
+          Image: "docker.io/library/nginx:latest"
+          # LogConfiguration:
+          Cpu: "256"
+          Memory: "512"
+          PortMappings:
+            - ContainerPort: "80"
+
+  Service:
+    Type: "AWS::ECS::Service"
+    Properties:
+      ServiceName: "nginx-service"
+      Cluster: !Ref FargateCluster
+      LaunchType: "FARGATE"
+      DeploymentConfiguration:
+        MaximumPercent: 200
+        MinimumHealthyPercent: 75
+      DesiredCount: 1
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          # Apparently if your dynamic value is in a List, you have to use the
+          # `Fn::` syntax, yucky.
+          SecurityGroups:
+            - Fn::ImportValue:
+                vpc-SecurityGroupHTTP
+          Subnets:
+            - Fn::ImportValue:
+                vpc-PublicSubnetID
+      TaskDefinition: !Ref TaskDefinition
