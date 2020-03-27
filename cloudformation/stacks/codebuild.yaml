@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "CodeBuild project(s)"
+
+Parameters:
+  ProjectName:
+    ConstraintDescription: ""
+    Description: "Name for the CodeBuild project"
+    Type: "String"
+
+Resources:
+
+  FREDcast:
+    Type: "AWS::CodeBuild::Project"
+    Properties:
+      Name: !Ref ProjectName
+      Description: "FREDcast on CodeBuild"
+      Source:
+        # This can also be blank to look for a "buildspec.yml" in the repo, or you
+        # can provide the filename as a string
+        BuildSpec: !Sub |
+          version: 0.2
+          phases:
+            build:
+              commands:
+                - make test
+        Type: "GITHUB"
+        Location: "https://github.com/ryapric/fredcast.git"
+        GitCloneDepth: 1
+      Artifacts:
+        Type: "NO_ARTIFACTS"
+      Environment:
+        Image: "docker.io/library/python:3.7-stretch"
+        Type: "LINUX_CONTAINER"
+        ComputeType: "BUILD_GENERAL1_SMALL"
+      # Triggers:
+      #   FilterGroup:
+      #     - 
+      #   Webhook: true
+      # For this dummy example, I'm not really sure what this Role needs to
+      # have. Definitely CloudWatch Logs access, but not sure what else. So, as
+      # of right now, this isn't working
+      ServiceRole: ""
+      LogsConfig:
+        CloudWatchLogs:
+          GroupName: "/aws/codebuild/fredcast"
+          StreamName: "fredcast-build"
+          Status: "ENABLED"
