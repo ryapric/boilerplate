@@ -34,9 +34,9 @@ Installation & Initialization
 
 This set of utilities are orchestrated and managed by a few [GNU
 Make](https://gnu.org/software/make) targets. The included `Makefile` contains
-targets for initializing the host (Ubuntu) system, starting/stopping/monitoring
-the `docker-compose` stack, and checking the stack status. All Make targets are
-to be run from the repo top-level.
+targets for initializing the host (Debian-based) system,
+starting/stopping/monitoring the `docker-compose` stack, and checking the stack
+status. All Make targets are to be run from the repo top-level.
 
 The steps for installation & initialization are as follows:
 
