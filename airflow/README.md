@@ -1,5 +1,5 @@
-Compliance Bot for Slalom STL's Innovation Lab
-==============================================
+Apache Airflow
+==============
 
 This repo wraps a local, [Dockerized](https://docker.com) deployment of [Apache
 Airflow](https://airflow.apache.org), which is used to facilitate the safe,
