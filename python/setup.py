@@ -12,10 +12,18 @@ setuptools.setup(
     long_description = long_description,
     url = 'https://url_to_repo',
     packages = setuptools.find_packages(),
-    python_requires = '>=3.6.*',
+    python_requires = '>= 3.6.*',
     install_requires = [
         'pandas>=0.23.4'
     ],
+    extras_require = {
+        'dev': [
+            'coverage',
+            'pytest',
+            'pytest-cov',
+            'mypy'
+        ]
+    },
     classifiers = [
         'Programming Language :: Python :: 3',
         'Operating System :: OS Independent',
