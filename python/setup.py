@@ -6,7 +6,7 @@ with open('README.md', 'r') as f:
 setuptools.setup(
     name = 'pkgname',
     version = '0.1.0',
-    author = ['Ryan Price'],
+    author = ['Ryan J. Price'],
     author_email = ['ryapric@gmail.com'],
     description = 'Short description',
     long_description = long_description,
@@ -14,7 +14,7 @@ setuptools.setup(
     packages = setuptools.find_packages(),
     python_requires = '>= 3.6.*',
     install_requires = [
-        'pandas>=0.23.4'
+        'pandas >= 0.23.4'
     ],
     extras_require = {
         'dev': [
@@ -30,7 +30,7 @@ setuptools.setup(
     ],
     entry_points = {
         'console_scripts': [
-            'modulename-main=pkgname.modulename.modulename_main:main'
+            'modulename-main = pkgname.modulename.modulename_main:main'
         ]
     },
     include_package_data = True
