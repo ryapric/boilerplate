@@ -1,0 +1,10 @@
+FROM python:pyver-slim-buster
+
+WORKDIR /root
+
+RUN apt-get update && apt-get install -y make \
+    && rm -rf /var/cache/apt/*
+
+COPY . .
+
+CMD ["make", "test"]

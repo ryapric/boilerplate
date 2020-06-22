@@ -1,8 +1,13 @@
-# Heavy Python garbage
-venv/
+# Filled, versioned, test Dockerfile
+Dockerfile-versioned
+
+# Heavy or build-artifact Python garbage
+*venv*
 *cache*
 *.pyc
 build/
+lib/
+include/
 dist/
 *egg-info*
 
@@ -20,9 +25,8 @@ README.*
 *cov/
 *,cover
 
-# Misc.
+# Misc., in case they show up
 .vscode/
-config.json
 *.log
 *.zip
 *.tar.gz

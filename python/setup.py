@@ -16,6 +16,14 @@ setuptools.setup(
     install_requires = [
         'pandas >= 0.23.4'
     ],
+    extras_require = {
+        'dev': [
+            'coverage',
+            'pytest',
+            'pytest-cov',
+            'mypy'
+        ]
+    },
     classifiers = [
         'Programming Language :: Python :: 3',
         'Operating System :: OS Independent',
