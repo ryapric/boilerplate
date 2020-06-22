@@ -43,7 +43,7 @@ The steps for installation & initialization are as follows:
 1. If this is a *brand-new host system*, run `make sysinit`. This will configure
    your Debian-based system (idempotently) to have everything it needs to host
    the containerized Airflow deployment. Note that this target depends on a
-   `sudo` call to run the included `bash` script, `helpers/sysinit/deb-init.sh`,
+   `sudo` call to run the included `bash` script, `scripts/sysinit/deb-init.sh`,
    so the running user will need `sudo` privileges and may be prompted for their
    password.
 
@@ -105,7 +105,7 @@ Therefore, all logs can be found in AWS (for example) as follows:
 Since CloudWatch and S3 would both used in this scenario, please note that
 Airflow would be expecting appropriate attached IAM Roles for authorization to
 write to those resources. The included Dockerfile file has a dummy credentials
-variable set, and the `helpers/airflow.cfg` file references it. This dummy
+variable set, and the `scripts/airflow.cfg` file references it. This dummy
 config allows for Airflow to use the attached IAM Role on your deployment host.
 
 Developer Notes

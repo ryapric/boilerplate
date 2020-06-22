@@ -11,7 +11,7 @@ export DOCKER_COMPOSE_VER=1.24
 # Install Docker, if it's not already installed (using a static, vetted, local
 # version of their headless installer)
 if ! command -v docker >/dev/null; then
-  bash ./helpers/sysinit/docker-install.sh
+  bash ./scripts/sysinit/docker-install.sh
   sudo usermod -aG docker "${USER}"
 fi
 

@@ -1,0 +1,14 @@
+[Unit]
+Description=Airflow webserver daemon
+
+[Service]
+User=airflow
+Group=airflow
+Type=simple
+ExecStart=bash /home/airflow/scripts/airflow-start.sh webserver
+Restart=on-failure
+RestartSec=5s
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

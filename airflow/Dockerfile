@@ -1,50 +1,19 @@
-# This image contains all of the tooling to support an Airflow deployment in
-# Docker.
+# !!! DO NOT USE THIS FOR CONTAINERIZED DEPLOYMENT, ONLY FOR TESTING !!! #
 
 FROM python:3.7-buster
 
-ENV AIRFLOW_VERSION=1.10
-
-# Comma-separated (no spaces) list of Airflow Extras; passed to pip
-ENV AIRFLOW_EXTRAS=postgres,aws,s3
-ENV AIRFLOW_HOME=/home/airflow/airflow
-
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Can set an empty variable to allow Airflow to hook into Cloud provider via the
-# instance profile/service account/etc., for permissions
-ENV AIRFLOW_CONN_CLOUD_PROVIDER_PROFILE=
+WORKDIR /airflow-scratch
 
-# Add helpful system debug & general utilities
-RUN apt-get update && apt-get install -y \
-        less \
-        nano \
-        htop \
-        nmap \
-        jq \
-    && rm -rf /var/cache/apt/*
+COPY . .
 
-# Add non-root airflow user
-RUN groupadd -r airflow \
-    && useradd -r -m -g airflow airflow
+RUN bash scripts/sysinit-deb.sh test
+
 USER airflow
-ENV PATH /home/airflow/.local/bin:${PATH}
-
-# Install Airflow, and generate placeholder folders with a call to --help
-RUN pip3 install --user \
-        "apache-airflow[${AIRFLOW_EXTRAS}]==${AIRFLOW_VERSION}.*" \
-        && rm -rf ${HOME}/.cache/pip \
-    && airflow --help > /dev/null
-
-# Add DAGs, and your own Airflow config file
-COPY ./dags/ ${AIRFLOW_HOME}/dags/
-COPY ./helpers/airflow.cfg ${AIRFLOW_HOME}/airflow.cfg
-
-# Parse the DAG files, to try & catch syntax errors before they get deployed
-RUN set -e; for dag in ${AIRFLOW_HOME}/dags/*.py; do python3 ${dag}; done
 
 EXPOSE 8080
 
 # Default dummy command as placeholder; Scheduler & Webserver containers will
 # provide their own launch commands in docker-compose.yaml
-CMD ["airflow", "--help"]
+CMD ["bash", "tests/docker-entrypoint.sh"]
