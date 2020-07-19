@@ -1,0 +1,82 @@
+# Definitely split out the Core section Resources in real life
+
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "AWS Config setup & rules"
+
+Resources:
+
+  ########
+  # Core #
+  ########
+  ConfigIamRole:
+    Type: "AWS::IAM::Role"
+    Description: Role for Config to access its DeliveryChannel
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service:
+                - "config.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      Path: "/"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSConfigRole
+      Policies:
+        - PolicyName: "ConfigPolicy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - "s3:PutObject"
+                Resource: !Sub
+                  - "${BucketArn}/AWSLogs/${AWS::AccountId}/*"
+                  - { BucketArn: !GetAtt ConfigBucket.Arn }
+              - Effect: "Allow"
+                Action:
+                  - "s3:GetBucketAcl"
+                Resource: !GetAtt ConfigBucket.Arn
+              - Effect: "Allow"
+                Action:
+                  - "sns:Publish"
+                Resource: !Ref ConfigTopic
+
+  ConfigBucket:
+    Type: AWS::S3::Bucket
+    Description: S3 Bucket required for tracking & storing Config changes
+    # DeletionPolicy: Retain
+    Properties:
+      BucketName: !Sub "awsconfig-${AWS::AccountId}"
+
+  ConfigTopic:
+    Type: AWS::SNS::Topic
+    Description: Optional SNS Topic for tracking & storing Config changes
+    Properties:
+      TopicName: !Sub "awsconfig-${AWS::AccountId}"
+
+  ConfigRecorder:
+    Type: AWS::Config::ConfigurationRecorder
+    Description: Required Recorder object that enables Config
+    DependsOn:
+      - ConfigIamRole
+    Properties:
+      RoleARN: !GetAtt ConfigIamRole.Arn
+
+  DeliveryChannel:
+    Type: AWS::Config::DeliveryChannel
+    Description: Required DeliveryChannel object that enables Config
+    DependsOn:
+      - ConfigIamRole
+    Properties:
+      S3BucketName: !Ref ConfigBucket
+      # SnsTopicARN: !Ref ConfigTopic
+      ConfigSnapshotDeliveryProperties:
+        DeliveryFrequency: Six_Hours
+
+
+  #########
+  # Rules #
+  #########
