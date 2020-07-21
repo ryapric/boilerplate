@@ -1,13 +1,8 @@
-# Definitely split out the Core section Resources in real life
-
 AWSTemplateFormatVersion: "2010-09-09"
 Description: "AWS Config setup & rules"
 
 Resources:
 
-  ########
-  # Core #
-  ########
   ConfigIamRole:
     Type: "AWS::IAM::Role"
     Properties:
@@ -85,48 +80,3 @@ Resources:
       # SnsTopicARN: !Ref ConfigTopic
       ConfigSnapshotDeliveryProperties:
         DeliveryFrequency: Six_Hours
-
-
-  #########
-  # Rules #
-  #########
-  RDSLoggingEnabled:
-    Type: AWS::Config::ConfigRule
-    Properties:
-      Description: Checks that all RDS DB Instances and Clusters have logging enabled
-      ConfigRuleName: RDSLoggingEnabled
-      Scope:
-        ComplianceResourceTypes:
-          - AWS::RDS::DBInstance
-          - AWS::RDS::DBCluster
-      Source:
-        Owner: AWS
-        SourceIdentifier: RDS_LOGGING_ENABLED
-      # The following can only be set when the managed rule supports it (i.e. if
-      # its trigger is 'Periodic')
-      # MaximumExecutionFrequency: Six_Hours
-  
-  S3PublicAccessBlocked:
-    Type: AWS::Config::ConfigRule
-    Properties:
-      Description: Checks that S3 Buckets have public access disabled
-      ConfigRuleName: S3PublicAccessBlocked
-      Scope:
-        ComplianceResourceTypes:
-          - AWS::S3::Bucket
-      Source:
-        Owner: AWS
-        SourceIdentifier: S3_BUCKET_PUBLIC_READ_PROHIBITED
-      MaximumExecutionFrequency: Six_Hours
-
-# Other recommended Managed Rules (ID -- trigger)
-# APPROVED_AMIS_BY_ID -- config changes
-# CLOUDFORMATION_STACK_DRIFT_DETECTION_CHECK -- both
-# EFS_ENCRYPTED_CHECK -- periodic
-# ENCRYPTED_VOLUMES -- config changes
-# IAM_USER_UNUSED_CREDENTIALS_CHECK -- periodic
-# RDS_SNAPSHOT_ENCRYPTED -- config changes
-# RDS_STORAGE_ENCRYPTED -- config changes
-# REDSHIFT_CLUSTER_CONFIGURATION_CHECK -- config changes
-# S3_BUCKET_SERVER_SIDE_ENCRYPTION_ENABLED -- config changes
-# S3_BUCKET_PUBLIC_WRITE_PROHIBITED -- both

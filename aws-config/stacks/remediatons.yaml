@@ -1,0 +1,66 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "AWS Config setup & rules"
+
+Resources:
+
+  RemediateS3NoPublicReadAccess:
+    Type: AWS::Config::RemediationConfiguration
+    Description: Remediation for Config Rule S3NoPublicReadAccess
+    Properties:
+      ConfigRuleName: S3NoPublicReadAccess
+      Automatic: true
+      TargetId: AWS-PublishSNSNotification
+      TargetType: SSM_DOCUMENT
+      Parameters:
+        Message:
+          ResourceValue:
+            Value: RESOURCE_ID
+        TopicArn:
+          StaticValue:
+            Values:
+              - !Ref TopicS3NoPublicReadAccess
+        # This specific value FOR SOME REASON needs to be static; you can't use
+        # intrinsic functions to pull the ARN. Run these two lines before
+        # deploying this stack:
+        # export AccountId=$(aws sts get-caller-identity --query Account --output text)
+        # sed -i "s/{{ AccountId }}/${AccountId}/g" stacks/config.yaml
+        AutomationAssumeRole:
+          StaticValue:
+            Values:
+              - "arn:aws:iam::{{ AccountId }}:role/PublishSNSNotificationAutomationExecutionRole"
+      # Need to specify both of these for automatic remediation, even though the
+      # docs don't say so (you'll get an error though)
+      MaximumAutomaticAttempts: 5
+      RetryAttemptSeconds: 60
+
+  # Name these with the 'ConfigRule-*' pattern so the statically-provided Role
+  # above can be used for any of them
+  TopicS3NoPublicReadAccess:
+    Type: AWS::SNS::Topic
+    Description: SNS Topic for Config Rule S3NoPublicReadAccess
+    Properties:
+      TopicName: ConfigRule-S3NoPublicReadAccess
+
+  PublishSNSNotificationAutomationExecutionRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      Description: Role allowing SNS notifications for Config Rules
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service:
+                - "ssm.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      Path: "/"
+      Policies:
+        - PolicyName: "PublishSNSNotificationAutomationExecutionPolicy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - "sns:Publish"
+                Resource: "arn:aws:sns:::ConfigRule-*"
