@@ -1,5 +1,2 @@
-up:
-	@docker-compose up -d --build
-
-down:
-	@docker-compose down
+ansible-playbook:
+	(cd ansible && ansible-playbook -i hosts main.yaml)

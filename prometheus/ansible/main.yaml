@@ -1,0 +1,42 @@
+- hosts: raspberry_pis:raspberry_pi_zeros
+  become: yes
+  tasks:
+
+    - name: Install core system tools
+      apt:
+        update_cache: yes
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+          - tar
+          - zip
+          - unzip
+        state: latest
+
+    - name: Download Prometheus Node Exporter
+      unarchive:
+        remote_src: yes
+        src: https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.{{ node_exporter_arch }}.tar.gz
+        dest: /root
+    
+    - name: Move node_exporter up a folder
+      command: mv /root/node_exporter-{{ node_exporter_version }}.{{ node_exporter_arch }}/node_exporter /root/
+        
+
+    - name: Copy up file(s)
+      copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+      with_items:
+        - src: './prometheus-node-exporter.service'
+          dest: '/etc/systemd/system/prometheus-node-exporter.service'
+          mode: '0600'
+
+    - name: Configure & run Node Exporter as a systemd service
+      systemd:
+        service: prometheus-node-exporter.service
+        state: restarted
+        daemon_reload: yes
+        enabled: yes

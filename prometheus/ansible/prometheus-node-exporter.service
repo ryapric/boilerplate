@@ -1,0 +1,11 @@
+[Unit]
+Description=Prometheus Node Exporter metrics server
+
+[Service]
+ExecStart=/root/node_exporter
+WorkingDirectory=/root
+Restart=always
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

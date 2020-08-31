@@ -1,0 +1,16 @@
+# Here's an example Ansible Inventory file for Rapsberry Pis around your house
+
+[servers:children]
+raspberry_pis
+raspberry_pi_zeros
+
+[raspberry_pis]
+192.168.1.101 node_exporter_arch=linux-armv7
+
+[raspberry_pi_zeros]
+192.168.1.100 node_exporter_arch=linux-armv6
+
+[servers:vars]
+ansible_user=pi
+ansible_ssh_private_key_file=~/.ssh/id_rsa
+node_exporter_version=1.0.1
